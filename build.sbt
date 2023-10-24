@@ -6,3 +6,5 @@ lazy val root = (project in file("."))
   .settings(
     name := "json2struct"
   )
+
+libraryDependencies += "org.json4s" %% "json4s-native" % "4.0.6"
