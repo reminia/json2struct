@@ -20,17 +20,21 @@ object Parser {
       seq += struct
       jObj.obj.foreach {
         case (name, obj: JObject) => go(name, obj, seq)
-        case (name, _@JArray(arr)) => arr.headOption match {
-          case Some(obj: JObject) => go(name, obj, seq)
-          case _ => ()
-        }
+        case (name, _@JArray(arr)) =>
+          if (arr.isEmpty) ()
+          else {
+            arr.head match {
+              case obj: JObject => go(name, obj, seq)
+              case _ => ()
+            }
+          }
         case _ => ()
       }
     }
 
     json match {
       case obj: JObject =>
-        val seq: mutable.Builder[Struct, Seq[Struct]] = Seq.newBuilder[Struct]
+        val seq = Seq.newBuilder[Struct]
         go(name, obj, seq)
         seq.result()
       case _ => throw new IllegalArgumentException("input json must be a JObject")

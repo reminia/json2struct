@@ -34,7 +34,7 @@ object GoType {
     override def desc: String = {
       if (name.isEmpty)
         "Unknown"
-      else name
+      else upper(name)
     }
   }
 
@@ -42,7 +42,7 @@ object GoType {
     override def desc: String = "Unknown"
   }
 
-  def apply(value: JValue, name: String = ""): GoType = {
+  def apply(value: JValue, name: String): GoType = {
     value match {
       case JInt(_) => GoInt
       case JDouble(_) => GoFloat
@@ -50,7 +50,7 @@ object GoType {
       case JBool(_) => GoBool
       case JArray(arr) =>
         if (arr.isEmpty) GoArray(Unknown)
-        else GoArray(GoType(arr.head))
+        else GoArray(GoType(arr.head, name))
       case JObject(_) => GoStruct(name)
       case _ => Unknown
     }
