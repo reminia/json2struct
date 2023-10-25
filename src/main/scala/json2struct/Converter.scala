@@ -1,6 +1,7 @@
 package json2struct
 
-import json2struct.Struct.{ShowStruct, StructField}
+import json2struct.GoStructAST.{Field, Struct}
+import json2struct.Printer.StructPrinter
 import org.json4s.JValue
 import org.json4s.JsonAST.{JArray, JField, JObject}
 import org.json4s.native.JsonMethods
@@ -39,8 +40,9 @@ object Converter {
 
   }
 
-  private def parseJsonField(field: JField): StructField = {
-    (field._1, GoType(field._2, field._1))
+  private def parseJsonField(field: JField): Field.Simple = {
+    val (name, value) = field
+    Field.Simple(name, GoType.apply(name, value))
   }
 
   def main(args: Array[String]): Unit = {
@@ -66,7 +68,7 @@ object Converter {
         |  }
         |}""".stripMargin
     convertJson(openai, "openAiResponse")
-      .map(ShowStruct.show)
+      .map(StructPrinter.print)
       .foreach(println)
   }
 }

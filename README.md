@@ -1,10 +1,11 @@
-# json2struct
+# json2struct ![ci](https://github.com/reminia/json2struct/actions/workflows/scala.yml/badge.svg)
 
 Convert between json and Golang struct, use json4s as the json AST.
 
 ## Motivation
 
 It's needed frequently to convert between http request/response body and struct types in Golang.
+
 So I write this tool to reduce some boilerplate handwrite work.
 
 ## json to struct

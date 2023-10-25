@@ -1,6 +1,7 @@
 package json2struct
 
 import json2struct.GoType.GoStruct
+import json2struct.Printer.upper
 import org.json4s.JsonAST._
 import org.json4s.{JArray, JBool}
 
@@ -65,7 +66,7 @@ object GoType {
     }
   }
 
-  def apply(value: JValue, name: String): GoType = {
+  def apply(name: String, value: JValue): GoType = {
     value match {
       case JInt(_) => GoInt
       case JDouble(_) => GoFloat32
@@ -73,18 +74,9 @@ object GoType {
       case JBool(_) => GoBool
       case JArray(arr) =>
         if (arr.isEmpty) GoArray(Unknown)
-        else GoArray(GoType(arr.head, name))
+        else GoArray(GoType(name, arr.head))
       case JObject(_) => GoStruct(name)
       case _ => Unknown
-    }
-  }
-
-  // uppercase first char
-  def upper(s: String): String = {
-    s.toCharArray.toList match {
-      case fst :: tail if fst.isLower =>
-        (fst.toUpper :: tail).mkString
-      case _ => s
     }
   }
 
