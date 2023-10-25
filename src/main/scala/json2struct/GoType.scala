@@ -10,19 +10,19 @@ sealed trait GoType {
 }
 
 object GoType {
-  object GoInt extends GoType {
+  case object GoInt extends GoType {
     override def desc = "int"
   }
 
-  object GoFloat extends GoType {
+  case object GoFloat extends GoType {
     override def desc: String = "float32"
   }
 
-  object GoString extends GoType {
+  case object GoString extends GoType {
     override def desc: String = "string"
   }
 
-  object GoBool extends GoType {
+  case object GoBool extends GoType {
     override def desc: String = "bool"
   }
 
@@ -38,7 +38,7 @@ object GoType {
     }
   }
 
-  object Unknown extends GoType {
+  case object Unknown extends GoType {
     override def desc: String = "Unknown"
   }
 
