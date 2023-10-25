@@ -3,6 +3,8 @@ package json2struct
 import org.json4s.JsonAST._
 import org.json4s.{JArray, JBool}
 
+import scala.annotation.switch
+
 sealed trait GoType {
   def desc: String
 
@@ -14,7 +16,11 @@ object GoType {
     override def desc = "int"
   }
 
-  case object GoFloat extends GoType {
+  case object GoInt32 extends GoType {
+    override def desc = "int32"
+  }
+
+  case object GoFloat32 extends GoType {
     override def desc: String = "float32"
   }
 
@@ -42,10 +48,21 @@ object GoType {
     override def desc: String = "Unknown"
   }
 
+  def from(tpe: String): GoType = {
+    (tpe: @switch) match {
+      case "int" => GoInt
+      case "int32" => GoInt32
+      case "float32" => GoFloat32
+      case "string" => GoString
+      case "bool" => GoBool
+      case sth => GoStruct(sth)
+    }
+  }
+
   def apply(value: JValue, name: String): GoType = {
     value match {
       case JInt(_) => GoInt
-      case JDouble(_) => GoFloat
+      case JDouble(_) => GoFloat32
       case JString(_) => GoString
       case JBool(_) => GoBool
       case JArray(arr) =>
