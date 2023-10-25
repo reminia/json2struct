@@ -8,7 +8,7 @@ import scala.util.parsing.combinator.JavaTokenParsers
 /**
  * Parse Golang struct type to StructAST
  */
-object StructParser extends JavaTokenParsers {
+object GoStructParser extends JavaTokenParsers {
 
   val types: Parser[GoType] = ("int" | "int32" | "bool" | "float32" | "string" | ident) ^^ GoType.from
 
@@ -21,8 +21,10 @@ object StructParser extends JavaTokenParsers {
   }
 
   val field: Parser[Field] = (ident ~ types ~ tag.?) ^^ {
-    case name ~ tpe ~ t if t.nonEmpty => Field.Simple(name, tpe, t.get)
-    case name ~ tpe ~ _ => Field.Simple(name, tpe)
+    case name ~ tpe ~ t if tpe.isStruct =>
+      Field.Struct(name, t.fold[Tag](Tag.None)(x => x))
+    case name ~ tpe ~ t =>
+      Field.Simple(name, tpe, t.fold[Tag](Tag.None)(x => x))
   } | array
 
   val struct: Parser[AStruct] = ("type" ~> ident ~ "struct" ~ "{" ~ field.* <~ "}") ^^ {

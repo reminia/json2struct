@@ -1,5 +1,6 @@
 package json2struct
 
+import json2struct.GoType.GoStruct
 import org.json4s.JsonAST._
 import org.json4s.{JArray, JBool}
 
@@ -9,6 +10,11 @@ sealed trait GoType {
   def desc: String
 
   override def toString: String = desc
+
+  def isStruct: Boolean = this match {
+    case GoStruct(_) => true
+    case _ => false
+  }
 }
 
 object GoType {
