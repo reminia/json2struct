@@ -9,11 +9,6 @@ object StructAST {
 
     def tag: Tag
 
-    def jsonName: String = tag match {
-      case Tag.Simple(_name) => _name
-      case _ => name
-    }
-
   }
 
   object Field {
@@ -32,7 +27,7 @@ object StructAST {
   sealed trait Tag
 
   object Tag {
-    case class Simple(name: String) extends Tag
+    case class Simple(props: Map[String, Seq[String]]) extends Tag
 
     case object None extends Tag
   }
