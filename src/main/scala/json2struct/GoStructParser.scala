@@ -1,6 +1,6 @@
 package json2struct
 
-import json2struct.StructAST.{Field, Tag, Struct => AStruct}
+import json2struct.GoStructAST.{Field, Tag, Struct => AStruct}
 
 import scala.collection.mutable
 import scala.util.parsing.combinator.JavaTokenParsers

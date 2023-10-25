@@ -1,6 +1,6 @@
 package json2struct
 
-object StructAST {
+object GoStructAST {
   sealed trait Field {
 
     def name: String
