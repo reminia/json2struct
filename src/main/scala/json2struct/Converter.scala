@@ -2,6 +2,7 @@ package json2struct
 
 import json2struct.GoStructAST.{Field, Struct}
 import json2struct.Printer.StructPrinter
+import json2struct.Printer.Syntax.toPrinterOps
 import org.json4s.JValue
 import org.json4s.JsonAST.{JArray, JField, JObject}
 import org.json4s.native.JsonMethods
@@ -68,7 +69,7 @@ object Converter {
         |  }
         |}""".stripMargin
     convertJson(openai, "openAiResponse")
-      .map(StructPrinter.print)
+      .map(_.print())
       .foreach(println)
   }
 }

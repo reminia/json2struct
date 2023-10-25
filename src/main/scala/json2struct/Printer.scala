@@ -1,6 +1,9 @@
 package json2struct
 
 import json2struct.GoStructAST.{Field, Struct, Tag}
+import json2struct.Printer.Syntax.toPrinterOps
+
+import scala.language.implicitConversions
 
 trait Printer[T] {
   def print(t: T): String
@@ -29,7 +32,17 @@ object Printer {
     }
   }
 
-  object TagPrinter extends Printer[Tag] {
+  object Syntax {
+    trait PrinterOps {
+      def print(): String
+    }
+
+    implicit def toPrinterOps[T: Printer](t: T): PrinterOps =
+      () => implicitly[Printer[T]].print(t)
+  }
+
+
+  implicit object TagPrinter extends Printer[Tag] {
     override def print(tag: Tag): String = tag match {
       case Tag.None => ""
       case Tag.Simple(props) =>
@@ -39,13 +52,13 @@ object Printer {
     }
   }
 
-  object FieldPrinter extends Printer[Field] {
+  implicit object FieldPrinter extends Printer[Field] {
     override def print(t: Field): String = {
 
       def jsonTag(): String = {
         t.tag match {
           case Tag.None => backtick(colon("json", quote(t.name)))
-          case _ => TagPrinter.print(t.tag)
+          case _ => t.tag.print()
         }
       }
 
@@ -61,11 +74,11 @@ object Printer {
 
   }
 
-  object StructPrinter extends Printer[Struct] {
+  implicit object StructPrinter extends Printer[Struct] {
     override def print(s: Struct): String = {
       val sb = new StringBuilder
       sb.append(s"type ${upper(s.name)} struct {")
-        .append(s.fields.map(FieldPrinter.print).mkString(newline, newline, newline))
+        .append(s.fields.map(_.print()).mkString(newline, newline, newline))
         .append("}")
       sb.toString()
     }
