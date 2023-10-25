@@ -72,7 +72,7 @@ type OpenAiResponse struct {
 }
 ```
 
-Struct AST after:
+[Struct AST](src/main/scala/json2struct/GoStructAST.scala) after:
 
 ```scala
 Struct(OpenAiResponse,List(Simple(Model,string,Simple(Map(xml -> List(model), json -> List(model, omitempty)))), Array(Choices,Choices,Simple(Map(json -> List(choices)))), Struct(Usage,Simple(Map(json -> List(usage)))), Simple(Object,string,Simple(Map(json -> List(object)))), Simple(Id,string,Simple(Map(json -> List(id)))), Simple(Created,int,Simple(Map(json -> List(created)))))))
