@@ -12,23 +12,20 @@ object StructParser extends JavaTokenParsers {
 
   val types: Parser[GoType] = ("int" | "int32" | "bool" | "float32" | "string" | ident) ^^ GoType.from
 
-  val array: Parser[Field] = ident ~ "[]" ~ types ^^ {
-    case name ~ _ ~ tpe => Field.Array(name, tpe)
-  }
-
-  val field: Parser[Field] = (ident ~ types) ^^ {
-    case name ~ tpe => Field.Simple(name, tpe)
-  } | array
-
   // TODO: fix it later
   val tag: Parser[Tag] = "`" ~ "json:" ~ "\"" ~> ident <~ "\"" ~ "`" ^^ Simple.apply
 
-  val fieldWithTag: Parser[Field] = field ~ tag.? ^^ {
-    case f ~ t if t.isDefined => f.setTag(t.get)
-    case f ~ _ => f
+  val array: Parser[Field] = ident ~ "[]" ~ types ~ tag.? ^^ {
+    case name ~ _ ~ tpe ~ t if t.nonEmpty => Field.Array(name, tpe, t.get)
+    case name ~ _ ~ tpe ~ _ => Field.Array(name, tpe)
   }
 
-  val struct: Parser[AStruct] = ("type" ~> ident ~ "struct" ~ "{" ~ fieldWithTag.* <~ "}") ^^ {
+  val field: Parser[Field] = (ident ~ types ~ tag.?) ^^ {
+    case name ~ tpe ~ t if t.nonEmpty => Field.Simple(name, tpe, t.get)
+    case name ~ tpe ~ _ => Field.Simple(name, tpe)
+  } | array
+
+  val struct: Parser[AStruct] = ("type" ~> ident ~ "struct" ~ "{" ~ field.* <~ "}") ^^ {
     case name ~ _ ~ _ ~ seq => AStruct(name, seq)
   }
 

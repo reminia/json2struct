@@ -3,33 +3,27 @@ package json2struct
 object StructAST {
   sealed trait Field {
 
-    private var _tag: Tag = Tag.None
-
     def name: String
 
     def tpe: GoType
 
-    def tag: Tag = _tag
+    def tag: Tag
 
     def jsonName: String = tag match {
       case Tag.Simple(_name) => _name
       case _ => name
     }
 
-    def setTag(t: Tag): Field = {
-      _tag = tag
-      this
-    }
   }
 
   object Field {
-    case class Simple(name: String, tpe: GoType)
+    case class Simple(name: String, tpe: GoType, tag: Tag = Tag.None)
       extends Field
 
-    case class Array(name: String, tpe: GoType)
+    case class Array(name: String, tpe: GoType, tag: Tag = Tag.None)
       extends Field
 
-    case class Struct(name: String) extends Field {
+    case class Struct(name: String, tag: Tag = Tag.None) extends Field {
       override def tpe: GoType = GoType.GoStruct(name)
     }
   }
