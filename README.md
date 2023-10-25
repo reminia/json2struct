@@ -9,7 +9,7 @@ So I write this tool to reduce some boilerplate handwrite work.
 
 ## json to struct
 
-Use openai response as an example:
+Json before:
 
 ```json
 {
@@ -33,7 +33,7 @@ Use openai response as an example:
 }
 ```
 
-After convert:
+Struct after:
 
 ```golang
 type OpenAiResponse struct {
@@ -59,4 +59,24 @@ type Usage struct {
 
 ## struct to json
 
+Struct before:
+
+```golang
+type OpenAiResponse struct {
+    Model string     `json:"model,omitempty" xml:"model"`
+    Choices []Choices     `json:"choices"`
+    Usage Usage     `json:"usage"`
+    Object string     `json:"object"`
+    Id string     `json:"id"`
+    Created int     `json:"created"`
+}
+```
+
+Struct AST after:
+
+```scala
+Struct(OpenAiResponse,List(Simple(Model,string,Simple(Map(xml -> List(model), json -> List(model, omitempty)))), Array(Choices,Choices,Simple(Map(json -> List(choices)))), Struct(Usage,Simple(Map(json -> List(usage)))), Simple(Object,string,Simple(Map(json -> List(object)))), Simple(Id,string,Simple(Map(json -> List(id)))), Simple(Created,int,Simple(Map(json -> List(created)))))))
+```
+
+Random json generated:
 TBD
