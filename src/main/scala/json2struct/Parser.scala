@@ -20,13 +20,10 @@ object Parser {
       seq += struct
       jObj.obj.foreach {
         case (name, obj: JObject) => go(name, obj, seq)
-        case (name, _@JArray(arr)) =>
-          if (arr.isEmpty) ()
-          else {
-            arr.head match {
-              case obj: JObject => go(name, obj, seq)
-              case _ => ()
-            }
+        case (name, _@JArray(arr)) if arr.nonEmpty =>
+          arr.head match {
+            case obj: JObject => go(name, obj, seq)
+            case _ => ()
           }
         case _ => ()
       }
