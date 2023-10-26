@@ -6,7 +6,7 @@ Convert between json and Golang struct, use json4s as the json AST.
 
 It's needed frequently to convert between http request/response body and struct types in Golang.
 
-So I write this tool to reduce some boilerplate handwritten work.
+So I write this tool to reduce some boilerplate work.
 
 ## json to struct
 
@@ -60,6 +60,9 @@ type Usage struct {
 
 ## struct to json
 
+First, structs will be parsed to a sequence of [Struct AST](src/main/scala/json2struct/GoStructAST.scala)
+using scala parser combinator, then random json will be generated based on the AST.
+
 Struct before:
 
 ```golang
@@ -73,11 +76,9 @@ type OpenAiResponse struct {
 }
 ```
 
-[Struct AST](src/main/scala/json2struct/GoStructAST.scala) after:
+Json after:
 
-```scala
-Struct(OpenAiResponse,List(Simple(Model,string,Simple(Map(xml -> List(model), json -> List(model, omitempty)))), Array(Choices,Choices,Simple(Map(json -> List(choices)))), Struct(Usage,Simple(Map(json -> List(usage)))), Simple(Object,string,Simple(Map(json -> List(object)))), Simple(Id,string,Simple(Map(json -> List(id)))), Simple(Created,int,Simple(Map(json -> List(created)))))))
+```json
 ```
 
-Random json generated:
 TBD
