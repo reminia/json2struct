@@ -46,7 +46,8 @@ object Printer {
     override def print(tag: Tag): String = tag match {
       case Tag.None => ""
       case Tag.Simple(props) =>
-        val tags = props.map { case (k, v) => colon(k, quote(v.mkString(","))) }
+        val tags = props
+          .map { case (k, v) => colon(k, quote(v.mkString(","))) }
           .mkString(blank())
         backtick(tags)
     }
