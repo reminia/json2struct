@@ -3,20 +3,29 @@ package json2struct
 import json2struct.GoStructAST.{Field, Struct, Tag}
 import json2struct.Printer.Syntax.toPrinterOps
 import json2struct.Printer.{StructPrinter, upper}
-import org.json4s.JValue
 import org.json4s.JsonAST.{JArray, JField, JObject}
-import org.json4s.native.JsonMethods
+import org.json4s._
+import org.json4s.native.{JsonMethods, Serialization}
 
 import scala.collection.mutable
 
 object Converter {
 
+  override def hashCode(): Int = super.hashCode()
+
   def convertJson(json: String, name: String): Seq[Struct] = {
     convert(JsonMethods.parse(json), name)
   }
 
-  private def convert(json: JValue, name: String): Seq[Struct] = {
+  def convertStruct(struct: String): Seq[Map[String, Any]] = {
+    GoStructParser
+      .parse(struct)
+      .fold[Seq[Map[String, Any]]](Seq.empty) {
+        ss => RandomGen.struct2map(ss)
+      }
+  }
 
+  private def convert(json: JValue, name: String): Seq[Struct] = {
     def go(name: String, jObj: JObject, seq: mutable.Builder[Struct, Seq[Struct]]): Unit = {
       val struct = Struct(upper(name), jObj.obj.map(parseJsonField))
       seq += struct
@@ -38,7 +47,6 @@ object Converter {
         seq.result()
       case _ => throw new IllegalArgumentException("input json must be a JObject")
     }
-
   }
 
   private def parseJsonField(field: JField): Field.Simple = {
@@ -71,7 +79,29 @@ object Converter {
         |  }
         |}""".stripMargin
     convertJson(openai, "openAiResponse")
-      .map(_.print())
-      .foreach(println)
+      .foreach(x => println(x.print()))
+
+    convertStruct(
+      """
+        |type OpenAiResponse struct {
+        |	Id      string   `json:"id"`
+        |	Object  string   `json:"object"`
+        |	Created uint64   `json:"created"`
+        |	Model   string   `json:"model"`
+        |	Choices []Choice `json:"choices"`
+        |	Usage   Usage    `json:"usage"`
+        |}
+        |
+        |type Choice struct {
+        |	Index        int     `json:"index"`
+        |	Message      Message `json:"message"`
+        |	FinishReason string  `json:"finish_reason"`
+        |}
+        |
+        |""".stripMargin)
+      .foreach { m =>
+        implicit val formats: Formats = Serialization.formats(NoTypeHints)
+        println(Serialization.write(m))
+      }
   }
 }

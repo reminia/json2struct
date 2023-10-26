@@ -2,8 +2,6 @@ package json2struct
 
 import json2struct.GoStructAST.{Field, Struct, Tag}
 import json2struct.GoType._
-import org.json4s.JsonAST.{JBool, JDecimal, JObject}
-import org.json4s.{JArray, JInt, JString, JValue}
 import org.scalacheck.Gen
 
 import java.util
@@ -18,18 +16,6 @@ object RandomGen {
   // todo: compose two Gen, maybe Kleisli
   def apply[I, O](f: I => O): RandomGen[I, O] = (i: I) => f(i)
 
-  case class GoStructGenerator(ctx: Map[String, JValue]) extends RandomGen[GoType, JValue] {
-    override def gen(tpe: GoType): JValue = tpe match {
-      case GoInt => JInt(1)
-      case GoBool => JBool.True
-      case GoInt32 => JInt(1)
-      case GoFloat32 => JDecimal(null)
-      case GoString => JString("")
-      case GoArray(ele) => JArray(List.empty)
-      case GoStruct(name) => ctx.getOrElse(name, JObject())
-    }
-  }
-
   def gotype2value(tpe: GoType, given: Map[String, Struct]): Gen[Any] = {
     tpe match {
       case GoInt => Gen.choose(0, 1000)
@@ -39,9 +25,13 @@ object RandomGen {
       } yield chars.mkString
       case GoBool => Gen.oneOf(true, false)
       case GoInt32 => Gen.choose(1000, 100000)
+      case GoUInt64 => Gen.choose(0L, Long.MaxValue)
       case GoFloat32 => Gen.double
-      case GoArray(ele) => Gen.listOfN(3, gotype2value(ele, given))
-      case GoStruct(name) => struct2map(given(name), given)
+      case GoArray(ele) => Gen.nonEmptyListOf(3, gotype2value(ele, given))
+      case GoStruct(name) =>
+        given.get(name).fold[Gen[Any]](Gen.const(null))(s =>
+          struct2map(s, given)
+        )
       case Unknown => Gen.const(null)
     }
   }
@@ -49,15 +39,33 @@ object RandomGen {
   def struct2map(s: Struct): Map[String, Any] =
     struct2map(s, Map.empty).sample.get
 
-  def struct2map(ss: Seq[Struct]): Map[String, Any] = {
-    null
+  def struct2map(ss: Seq[Struct]): Seq[Map[String, Any]] = {
+    val context = ss.map(s => s.name -> s).toMap
+    val nodes = Set.newBuilder[String]
+    val edges = Set.newBuilder[(String, String)]
+    ss.foreach { s =>
+      s.fields.foreach {
+        case f: Field.Struct =>
+          edges += s.name -> f.name
+          nodes += s.name += f.name
+        case f: Field.Array if f.tpe.isStruct =>
+          edges += s.name -> f.tpe.desc
+          nodes += s.name += f.tpe.desc
+        case _ => ()
+      }
+    }
+    val graph = Graph(nodes.result(), edges.result())
+    println(graph)
+    graph.sources.map(context.apply)
+      .map(s => struct2map(s, context).sample.get)
+      .toSeq
   }
 
   def struct2map(s: Struct, given: Map[String, Struct]): Gen[Map[String, Any]] = {
     val seq: Seq[Gen[(String, Any)]] = s.fields.map { field =>
       field.tag
       for {
-        k <- Gen.const(jsonKey(field))
+        k <- Gen.const(field.name)
         v <- gotype2value(field.tpe, given)
       } yield k -> v
     }

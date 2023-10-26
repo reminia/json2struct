@@ -27,6 +27,10 @@ object GoType {
     override def desc = "int32"
   }
 
+  case object GoUInt64 extends GoType {
+    override def desc = "uint64"
+  }
+
   case object GoFloat32 extends GoType {
     override def desc: String = "float32"
   }
@@ -59,9 +63,11 @@ object GoType {
     (tpe: @switch) match {
       case "int" => GoInt
       case "int32" => GoInt32
+      case "uint64" => GoUInt64
       case "float32" => GoFloat32
       case "string" => GoString
       case "bool" => GoBool
+      // todo: not all go types supported for now
       case sth => GoStruct(sth)
     }
   }
