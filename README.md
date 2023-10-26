@@ -6,7 +6,7 @@ Convert between json and Golang struct, use json4s as the json AST.
 
 It's needed frequently to convert between http request/response body and struct types in Golang.
 
-So I write this tool to reduce some boilerplate handwrite work.
+So I write this tool to reduce some boilerplate handwritten work.
 
 ## json to struct
 
