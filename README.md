@@ -9,7 +9,7 @@ It's needed frequently to convert between http request/response body and struct 
 
 ## json to struct
 
-Json before:
+Json input:
 
 ```json
 {
@@ -62,7 +62,7 @@ type Usage struct {
 All structs will be parsed to a sequence of [Struct AST](src/main/scala/json2struct/GoStructAST.scala).
 And then random data will be filled into the structs to produce fake json data.
 
-Struct before:
+Struct input:
 
 ```golang
 type OpenAiResponse struct {
