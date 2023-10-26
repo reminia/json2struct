@@ -1,6 +1,7 @@
 package json2struct
 
 import json2struct.GoStructAST.{Field, Struct, Tag}
+import json2struct.GoType.GoArray
 import json2struct.Printer.Syntax.toPrinterOps
 
 import scala.collection.mutable
@@ -36,8 +37,8 @@ object GoStructParser extends JavaTokenParsers {
   }
 
   lazy val array: Parser[Field] = ident ~ "[]" ~ types ~ tag.? ^^ {
-    case name ~ _ ~ tpe ~ t if t.nonEmpty => Field.Array(name, GoType.GoArray(tpe), t.get)
-    case name ~ _ ~ tpe ~ _ => Field.Array(name, GoType.GoArray(tpe))
+    case name ~ _ ~ tpe ~ t if t.nonEmpty => Field.Simple(name, GoArray(tpe), t.get)
+    case name ~ _ ~ tpe ~ _ => Field.Simple(name, GoArray(tpe))
   }
 
   lazy val field: Parser[Field] = (ident ~ types ~ tag.?) ^^ {

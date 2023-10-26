@@ -1,6 +1,6 @@
 package json2struct
 
-import json2struct.GoType.GoStruct
+import json2struct.GoType.{GoArray, GoStruct}
 import json2struct.Printer.upper
 import org.json4s.JsonAST._
 import org.json4s.{JArray, JBool}
@@ -16,6 +16,7 @@ sealed trait GoType {
     case GoStruct(_) => true
     case _ => false
   }
+
 }
 
 object GoType {
@@ -50,13 +51,13 @@ object GoType {
   case class GoStruct(name: String) extends GoType {
     override def desc: String = {
       if (name.isEmpty)
-        "Unknown"
+        unknown
       else upper(name)
     }
   }
 
   case object Unknown extends GoType {
-    override def desc: String = "Unknown"
+    override def desc: String = unknown
   }
 
   def from(tpe: String): GoType = {
@@ -76,6 +77,7 @@ object GoType {
     value match {
       case JInt(_) => GoInt
       case JDouble(_) => GoFloat32
+      case JLong(num) if num >= 0 => GoUInt64
       case JString(_) => GoString
       case JBool(_) => GoBool
       case JArray(arr) =>

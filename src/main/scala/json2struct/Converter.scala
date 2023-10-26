@@ -11,8 +11,6 @@ import scala.collection.mutable
 
 object Converter {
 
-  override def hashCode(): Int = super.hashCode()
-
   def convertJson(json: String, name: String): Seq[Struct] = {
     convert(JsonMethods.parse(json), name)
   }

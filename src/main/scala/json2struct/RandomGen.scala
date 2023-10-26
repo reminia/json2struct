@@ -27,7 +27,7 @@ object RandomGen {
       case GoInt32 => Gen.choose(1000, 100000)
       case GoUInt64 => Gen.choose(0L, Long.MaxValue)
       case GoFloat32 => Gen.double
-      case GoArray(ele) => Gen.nonEmptyListOf(3, gotype2value(ele, given))
+      case GoArray(ele) => Gen.listOfN(3, gotype2value(ele, given))
       case GoStruct(name) =>
         given.get(name).fold[Gen[Any]](Gen.const(null))(s =>
           struct2map(s, given)
@@ -36,9 +36,6 @@ object RandomGen {
     }
   }
 
-  def struct2map(s: Struct): Map[String, Any] =
-    struct2map(s, Map.empty).sample.get
-
   def struct2map(ss: Seq[Struct]): Seq[Map[String, Any]] = {
     val context = ss.map(s => s.name -> s).toMap
     val nodes = Set.newBuilder[String]
@@ -46,16 +43,15 @@ object RandomGen {
     ss.foreach { s =>
       s.fields.foreach {
         case f: Field.Struct =>
-          edges += s.name -> f.name
+          edges += (s.name -> f.name)
           nodes += s.name += f.name
-        case f: Field.Array if f.tpe.isStruct =>
-          edges += s.name -> f.tpe.desc
-          nodes += s.name += f.tpe.desc
+        case Field.Simple(name, GoArray(tpe), _) if tpe.isStruct =>
+          edges += s.name -> tpe.desc
+          nodes += s.name += tpe.desc
         case _ => ()
       }
     }
     val graph = Graph(nodes.result(), edges.result())
-    println(graph)
     graph.sources.map(context.apply)
       .map(s => struct2map(s, context).sample.get)
       .toSeq
@@ -65,7 +61,7 @@ object RandomGen {
     val seq: Seq[Gen[(String, Any)]] = s.fields.map { field =>
       field.tag
       for {
-        k <- Gen.const(field.name)
+        k <- Gen.const(jsonKey(field))
         v <- gotype2value(field.tpe, given)
       } yield k -> v
     }
@@ -86,17 +82,4 @@ object RandomGen {
     }
   }
 
-  def main(args: Array[String]): Unit = {
-    GoStructParser.parse(
-        """
-          |type Usage struct {
-          |    Completion_tokens int     `json:"completion_tokens"`
-          |    Prompt_tokens int     `json:"prompt_tokens"`
-          |    Total_tokens int     `json:"total_tokens"`
-          |}
-          |""".stripMargin)
-      .map(_.head)
-      .map(struct2map)
-      .foreach(println)
-  }
 }

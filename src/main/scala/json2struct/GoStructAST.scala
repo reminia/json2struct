@@ -18,9 +18,6 @@ object GoStructAST {
     case class Simple(name: String, tpe: GoType, tag: Tag = Tag.None)
       extends Field
 
-    case class Array(name: String, tpe: GoType, tag: Tag = Tag.None)
-      extends Field
-
     case class Struct(name: String, tag: Tag = Tag.None) extends Field {
       override def tpe: GoType = GoType.GoStruct(name)
     }
