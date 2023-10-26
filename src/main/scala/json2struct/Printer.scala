@@ -64,7 +64,7 @@ object Printer {
 
       val sb = new StringBuilder()
       sb.append(indent())
-        .append(upper(t.name))
+        .append(t.name)
         .append(indent(2))
         .append(t.tpe.desc)
         .append(indent(2))
@@ -77,7 +77,7 @@ object Printer {
   implicit object StructPrinter extends Printer[Struct] {
     override def print(s: Struct): String = {
       val sb = new StringBuilder
-      sb.append(s"type ${upper(s.name)} struct {")
+      sb.append(s"type ${s.name} struct {")
         .append(s.fields.map(_.print()).mkString(newline, newline, newline))
         .append("}")
       sb.toString()
