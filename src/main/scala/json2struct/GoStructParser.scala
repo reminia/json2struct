@@ -11,7 +11,7 @@ import scala.util.parsing.combinator.JavaTokenParsers
  */
 object GoStructParser extends JavaTokenParsers {
 
-  lazy val types: Parser[GoType] = ("int" | "int32" | "bool" | "float32" | "string" | ident) ^^ GoType.from
+  lazy val types: Parser[GoType] = ("int" | "int32" | "uint64" | "bool" | "float32" | "string" | ident) ^^ GoType.from
 
   def quote[T](inside: Parser[T]): Parser[T] = "\"" ~> inside <~ "\""
 
@@ -36,8 +36,8 @@ object GoStructParser extends JavaTokenParsers {
   }
 
   lazy val array: Parser[Field] = ident ~ "[]" ~ types ~ tag.? ^^ {
-    case name ~ _ ~ tpe ~ t if t.nonEmpty => Field.Array(name, tpe, t.get)
-    case name ~ _ ~ tpe ~ _ => Field.Array(name, tpe)
+    case name ~ _ ~ tpe ~ t if t.nonEmpty => Field.Array(name, GoType.GoArray(tpe), t.get)
+    case name ~ _ ~ tpe ~ _ => Field.Array(name, GoType.GoArray(tpe))
   }
 
   lazy val field: Parser[Field] = (ident ~ types ~ tag.?) ^^ {

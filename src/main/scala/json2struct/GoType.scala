@@ -44,7 +44,7 @@ object GoType {
   }
 
   case class GoArray(element: GoType) extends GoType {
-    override def desc: String = s"[]$element"
+    override def desc: String = s"[]${element.desc}"
   }
 
   case class GoStruct(name: String) extends GoType {
