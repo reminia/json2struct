@@ -12,6 +12,9 @@ object GoStructAST {
   }
 
   object Field {
+
+    def unapply(f: Field): Option[(String, GoType, Tag)] = Some(f.name, f.tpe, f.tag)
+
     case class Simple(name: String, tpe: GoType, tag: Tag = Tag.None)
       extends Field
 
