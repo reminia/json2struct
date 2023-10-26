@@ -1,12 +1,11 @@
 # json2struct ![ci](https://github.com/reminia/json2struct/actions/workflows/scala.yml/badge.svg)
 
-Convert between json and Golang struct, use json4s as the json AST.
+Convert between json and Golang struct, using json4s as the json AST and scalacheck for random data
+generation.
 
 ## Motivation
 
 It's needed frequently to convert between http request/response body and struct types in Golang.
-
-So I write this tool to reduce some boilerplate work.
 
 ## json to struct
 
@@ -34,51 +33,66 @@ Json before:
 }
 ```
 
-Struct after:
+Generated struct types:
 
 ```golang
 type OpenAiResponse struct {
-    Model string     `json:"model"`
-    Choices []Choices     `json:"choices"`
-    Usage Usage     `json:"usage"`
-    Object string     `json:"object"`
-    Id string     `json:"id"`
-    Created int     `json:"created"`
+    Id    string    `json:"id"`
+    Object    string    `json:"object"`
+    Created    int    `json:"created"`
+    Model    string    `json:"model"`
+    Choices    []Choices    `json:"choices"`
+    Usage    Usage    `json:"usage"`
 }
 type Choices struct {
-    Finish_reason string     `json:"finish_reason"`
-    Index int     `json:"index"`
-    Text string     `json:"text"`
-    Logprobs Unknown     `json:"logprobs"`
+    Text    string    `json:"text"`
+    Index    int    `json:"index"`
+    Logprobs    *Unknown*    `json:"logprobs"`
+    Finish_reason    string    `json:"finish_reason"`
 }
 type Usage struct {
-    Completion_tokens int     `json:"completion_tokens"`
-    Prompt_tokens int     `json:"prompt_tokens"`
-    Total_tokens int     `json:"total_tokens"`
+    Prompt_tokens    int    `json:"prompt_tokens"`
+    Completion_tokens    int    `json:"completion_tokens"`
+    Total_tokens    int    `json:"total_tokens"`
 }
 ```
 
 ## struct to json
 
-First, structs will be parsed to a sequence of [Struct AST](src/main/scala/json2struct/GoStructAST.scala)
-using scala parser combinator, then random json will be generated based on the AST.
+All structs will be parsed to a sequence of [Struct AST](src/main/scala/json2struct/GoStructAST.scala).
+And then random data will be filled into the structs to produce fake json data.
 
 Struct before:
 
 ```golang
 type OpenAiResponse struct {
-    Model string     `json:"model,omitempty" xml:"model"`
-    Choices []Choices     `json:"choices"`
-    Usage Usage     `json:"usage"`
-    Object string     `json:"object"`
-    Id string     `json:"id"`
-    Created int     `json:"created"`
+	Id      string   `json:"id"`
+	Object  string   `json:"object"`
+	Created uint64   `json:"created"`
+	Model   string   `json:"model"`
+	Choices []Choice `json:"choices"`
+	Usage   Usage    `json:"usage"`
 }
+type Choice struct {
+	Index        int     `json:"index"`
+	Message      Message `json:"message"`
+	FinishReason string  `json:"finish_reason"`
+}
+type Usage struct {
+	PromptTokens     int `json:"prompt_tokens"`
+	CompletionTokens int `json:"completion_tokens"`
+	TotalTokens      int `json:"total_tokens"`
+}
+
+type Message struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
+}
+
 ```
 
-Json after:
+Json generated:
 
 ```json
+{"model":"QC","choices":[{"index":482,"message":{"role":"cQUu2Gd","content":"NL"},"finish_reason":"Lckyp"},{"index":8,"message":{"role":"reH6","content":"o"},"finish_reason":"yMgu"},{"index":704,"message":{"role":"5X","content":"wXVmgIN"},"finish_reason":"mNl8"}],"usage":{"prompt_tokens":906,"completion_tokens":569,"total_tokens":930},"object":"5Y2li","id":"HSQ9","created":6840891044428693685}
 ```
-
-TBD
