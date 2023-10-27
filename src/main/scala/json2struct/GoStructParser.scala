@@ -48,8 +48,10 @@ object GoStructParser extends JavaTokenParsers {
       Field.Simple(name, tpe, t.fold[Tag](Tag.None)(identity))
   } | array
 
-  lazy val struct: Parser[Struct] = ("type" ~> ident ~ "struct" ~ "{" ~ field.* <~ "}") ^^ {
-    case name ~ _ ~ _ ~ seq => Struct(name, seq)
+  def curly[T](in: Parser[T]): Parser[T] = "{" ~> in <~ "}"
+
+  lazy val struct: Parser[Struct] = ("type" ~> ident ~ "struct" ~ curly(field.*)) ^^ {
+    case name ~ _ ~ seq => Struct(name, seq)
   }
 
   lazy val structs: Parser[Seq[Struct]] = struct.*

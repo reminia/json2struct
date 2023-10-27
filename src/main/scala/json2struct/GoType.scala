@@ -1,6 +1,6 @@
 package json2struct
 
-import json2struct.GoType.{GoArray, GoStruct}
+import json2struct.GoType.GoStruct
 import json2struct.Printer.upper
 import org.json4s.JsonAST._
 import org.json4s.{JArray, JBool}

@@ -19,7 +19,7 @@ object Printer {
 
   def backtick(in: String): String = "`" + in + "`"
 
-  def indent(num: Int = 4): String = blank(4)
+  def indent(num: Int = 4): String = blank(num)
 
   def newline = "\n"
 
