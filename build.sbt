@@ -8,7 +8,10 @@ lazy val root = (project in file("."))
     name := "json2struct"
   )
 
-libraryDependencies += "org.json4s" %% "json4s-native" % "4.0.6"
-libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.3.0"
-libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.15.4"
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" % "test"
+libraryDependencies ++= Seq(
+  "org.json4s" %% "json4s-native" % "4.0.6",
+  "org.scala-lang.modules" %% "scala-parser-combinators" % "2.3.0",
+  "org.scalacheck" %% "scalacheck" % "1.15.4",
+  "org.scalatest" %% "scalatest" % "3.2.15" % "test",
+  "org.rogach" %% "scallop" % "5.0.0"
+)
