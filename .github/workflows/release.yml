@@ -4,8 +4,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  packages: write
+  contents: write
 
 jobs:
   build:
@@ -20,5 +19,15 @@ jobs:
           distribution: 'temurin'
           cache: 'sbt'
 
-      - name: Compile & test
+      - name: build native image
         run: sbt nativeImage
+
+      - name: zip native image
+        run: zip json2struct-ubuntu.zip target/native-image/json2struct
+
+      - name: release zip with native image
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "json2struct-ubuntu.zip"
+          name: ${{ vars.RELEASE_VERSION }}
+
