@@ -75,7 +75,7 @@ object RandomGen {
       case Tag.Simple(props) =>
         val values = props.get("json")
         values.fold(name) { seq =>
-          val ret = seq.filter(x => !Seq("-", "omitempty").contains(x))
+          val ret = seq.filter(x => SPECIAL_JSON_PROPS.contains(x))
           ret.headOption.fold(name)(identity)
         }
       case _ => name
