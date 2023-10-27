@@ -1,8 +1,6 @@
 version := "0.1.0-SNAPSHOT"
 scalaVersion := "2.13.12"
 
-//enablePlugins(ScalaNativePlugin)
-
 lazy val root = (project in file("."))
   .settings(
     name := "json2struct"
@@ -15,3 +13,6 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.2.15" % "test",
   "org.rogach" %% "scallop" % "5.0.0"
 )
+
+mainClass := Some("json2struct.cli.Cli")
+enablePlugins(NativeImagePlugin)
