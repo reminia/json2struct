@@ -45,7 +45,7 @@ object RandomGen {
         case f: Field.Struct =>
           edges += (s.name -> f.name)
           nodes += s.name += f.name
-        case Field.Simple(name, GoArray(tpe), _) if tpe.isStruct =>
+        case Field.Simple(_, GoArray(tpe), _) if tpe.isStruct =>
           edges += s.name -> tpe.desc
           nodes += s.name += tpe.desc
         case _ => ()

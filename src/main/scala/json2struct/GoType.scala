@@ -51,13 +51,13 @@ object GoType {
   case class GoStruct(name: String) extends GoType {
     override def desc: String = {
       if (name.isEmpty)
-        unknown
+        UNKNOWN
       else upper(name)
     }
   }
 
   case object Unknown extends GoType {
-    override def desc: String = unknown
+    override def desc: String = UNKNOWN
   }
 
   def from(tpe: String): GoType = {

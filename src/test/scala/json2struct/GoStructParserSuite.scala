@@ -29,9 +29,11 @@ class GoStructParserSuite extends AnyWordSpec {
 
       val structs = option.get
       structs.length should be(2)
+
       val map = structs.map(s => s.name -> s).toMap
       val choices = map("OpenAiResponse").fields.filter(_.name == "Choices")
       choices.head.isArray should be(true)
+
       val usage = map("OpenAiResponse").fields.filter(_.name == "Usage")
       usage.head.isStruct should be(true)
     }

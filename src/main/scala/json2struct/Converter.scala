@@ -42,7 +42,7 @@ object Converter {
         val seq = Seq.newBuilder[Struct]
         go(name, obj, seq)
         seq.result()
-      case _ => throw new IllegalArgumentException("input json must be a JObject")
+      case _ => throw new IllegalArgumentException("input json must be a json object")
     }
   }
 
