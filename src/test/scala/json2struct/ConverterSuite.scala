@@ -35,7 +35,7 @@ class ConverterSuite extends AnyWordSpec {
       structs.size should be(3)
       structs.map(_.name) should contain theSameElementsAs Seq("OpenAiResponse", "Choices", "Usage")
       noException shouldBe thrownBy {
-        structs.foreach(_.print())
+        structs.foreach(s => println(s.print()))
       }
     }
 
