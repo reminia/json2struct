@@ -30,4 +30,5 @@ jobs:
         with:
           artifacts: "json2struct-ubuntu.zip"
           name: ${{ vars.RELEASE_VERSION }}
+          tag: ${{ vars.RELEASE_VERSION }}
 
