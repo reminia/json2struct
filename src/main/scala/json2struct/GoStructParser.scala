@@ -2,7 +2,6 @@ package json2struct
 
 import json2struct.GoStructAST.{Field, Struct, Tag}
 import json2struct.GoType.GoArray
-import json2struct.Printer.Syntax.toPrinterOps
 
 import scala.collection.mutable
 import scala.util.parsing.combinator.JavaTokenParsers
@@ -63,30 +62,6 @@ object GoStructParser extends JavaTokenParsers {
         println(msg)
         None
     }
-  }
-
-  def main(args: Array[String]): Unit = {
-    val option = parse(
-      """
-        |type OpenAiResponse struct {
-        |	Id      string   `json:"id"`
-        |	Object  string   `json:"object"`
-        |	Created uint64   `json:"created"`
-        |	Model   string   `json:"model"`
-        |	Choices []Choice `json:"choices"`
-        |	Usage   Usage    `json:"usage"`
-        |}
-        |
-        |type Usage struct {
-        |    Completion_tokens int     `json:"completion_tokens"`
-        |    Prompt_tokens int     `json:"prompt_tokens"`
-        |    Total_tokens int     `json:"total_tokens"`
-        |}
-        |
-        |""".stripMargin)
-    option.foreach(seq =>
-      seq.foreach(s => println(s.print()))
-    )
   }
 
 }

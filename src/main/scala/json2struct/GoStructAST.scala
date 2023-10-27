@@ -1,5 +1,7 @@
 package json2struct
 
+import json2struct.GoType.GoArray
+
 object GoStructAST {
   sealed trait Field {
 
@@ -9,6 +11,15 @@ object GoStructAST {
 
     def tag: Tag
 
+    def isArray: Boolean = tpe match {
+      case GoArray(_) => true
+      case _ => false
+    }
+
+    def isStruct: Boolean = this match {
+      case Field.Struct(_, _) => true
+      case _ => false
+    }
   }
 
   object Field {
