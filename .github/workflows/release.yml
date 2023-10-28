@@ -19,16 +19,14 @@ jobs:
           distribution: 'temurin'
           cache: 'sbt'
 
-      - name: build native image
-        run: sbt nativeImage
-
-      - name: zip native image
-        run: zip -j json2struct-ubuntu.zip target/native-image/json2struct
+      - name: build zip
+        run:  sbt universal:packageBin
 
       - name: release zip
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "json2struct-ubuntu.zip"
+          artifacts: "json2struct*.zip"
           name: ${{ vars.RELEASE_VERSION }}
           tag: ${{ vars.RELEASE_VERSION }}
+          allowUpdates: true
 

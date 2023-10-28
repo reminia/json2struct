@@ -14,5 +14,6 @@ libraryDependencies ++= Seq(
   "org.rogach" %% "scallop" % "5.0.0"
 )
 
-mainClass := Some("json2struct.cli.Cli")
-enablePlugins(NativeImagePlugin)
+enablePlugins(JavaAppPackaging, UniversalPlugin)
+Compile / mainClass := Some("json2struct.cli.Cli")
+Universal / mappings ++= Seq(file("README.MD") -> "README.md")
