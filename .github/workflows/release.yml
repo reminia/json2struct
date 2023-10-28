@@ -7,7 +7,7 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +20,7 @@ jobs:
           cache: 'sbt'
 
       - name: build zip
-        run:  sbt universal:packageBin
+        run: sbt universal:packageBin
 
       - name: release zip
         uses: ncipollo/release-action@v1
@@ -30,3 +30,5 @@ jobs:
           tag: ${{ vars.RELEASE_VERSION }}
           allowUpdates: true
 
+      - name: publish packages
+        run: sbt publish
