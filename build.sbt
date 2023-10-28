@@ -20,7 +20,8 @@ Compile / mainClass := Some("json2struct.cli.Cli")
 Universal / mappings ++= Seq(file("README.md") -> "README.md")
 
 lazy val githubUser = System.getenv("GITHUB_REPOSITORY_OWNER")
-lazy val repo = Seq("https://maven.pkg.github.com", githubUser, "repo").mkString("/")
+lazy val repo = Seq("https://maven.pkg.github.com", githubUser, System.getenv("GITHUB_REPOSITORY"))
+  .mkString("/")
 publishTo := Some("Github repo" at repo)
 publishMavenStyle := true
 credentials += Credentials(
