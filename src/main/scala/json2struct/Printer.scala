@@ -2,6 +2,8 @@ package json2struct
 
 import json2struct.GoStructAST.{Field, Struct, Tag}
 import json2struct.Printer.Syntax.toPrinterOps
+import org.json4s.native.Serialization
+import org.json4s.{Formats, NoTypeHints}
 
 import scala.language.implicitConversions
 
@@ -82,6 +84,13 @@ object Printer {
         .append(s.fields.map(_.print()).mkString(newline, newline, newline))
         .append("}")
       sb.toString()
+    }
+  }
+
+  implicit object MapPrinter extends Printer[Map[String, Any]] {
+    override def print(map: Map[String, Any]): String = {
+      implicit val formats: Formats = Serialization.formats(NoTypeHints)
+      Serialization.write(map)
     }
   }
 

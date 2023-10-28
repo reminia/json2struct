@@ -1,8 +1,6 @@
 package json2struct
 
 import json2struct.Printer.Syntax.toPrinterOps
-import org.json4s.native.Serialization
-import org.json4s.{Formats, NoTypeHints}
 import org.scalatest.matchers.should.Matchers._
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -69,11 +67,7 @@ class ConverterSuite extends AnyWordSpec {
           |""".stripMargin)
 
       noException shouldBe thrownBy {
-        seq
-          .foreach { m =>
-            implicit val formats: Formats = Serialization.formats(NoTypeHints)
-            println(Serialization.write(m))
-          }
+        seq.foreach { m => println(m.print()) }
       }
     }
   }

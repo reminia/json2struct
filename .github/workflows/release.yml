@@ -23,9 +23,9 @@ jobs:
         run: sbt nativeImage
 
       - name: zip native image
-        run: zip json2struct-ubuntu.zip target/native-image/json2struct
+        run: zip -j json2struct-ubuntu.zip target/native-image/json2struct
 
-      - name: release zip with native image
+      - name: release zip
         uses: ncipollo/release-action@v1
         with:
           artifacts: "json2struct-ubuntu.zip"
