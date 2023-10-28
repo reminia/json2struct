@@ -4,3 +4,6 @@ target/
 
 .DS_Store
 
+# ignore binary
+json2struct
+json2struct.exe
