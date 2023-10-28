@@ -7,7 +7,22 @@ generation.
 
 It's needed frequently to convert between http request/response body and struct types in Golang.
 
-## json to struct
+## Build & Run
+
+* `sbt compile`, compile it.
+* `sbt universal:packageBin`, package the zip which lies in target/universal folder.
+* unzip the [zip](https://github.com/reminia/json2struct/releases) package,
+ run it by `bin/json2struct`
+
+It's a simple [cli](src/main/scala/json2struct/cli/Cli.scala) tool. You can use it as:
+* `bin/json2struct --help`, show help message.
+* `bin/json2struct "struct content"`. It converts struct to random json data.
+* `bin/json2struct -j name "json content"`. It converts json to struct types,
+ name is the top struct type name.
+
+## Samples
+
+### json to struct
 
 Json input:
 
@@ -57,7 +72,7 @@ type Usage struct {
 }
 ```
 
-## struct to json
+### struct to json
 
 All structs will be parsed to a sequence of [Struct AST](src/main/scala/json2struct/GoStructAST.scala).
 And then random data will be filled into the structs to produce fake json data.
