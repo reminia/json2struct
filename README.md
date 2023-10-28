@@ -12,7 +12,7 @@ It's needed frequently to convert between http request/response body and struct 
 * `sbt compile`, compile it.
 * `sbt universal:packageBin`, package the zip which lies in target/universal folder.
 * unzip the [zip](https://github.com/reminia/json2struct/releases) package,
- run it by `bin/json2struct`
+ run it by `bin/json2struct` script.
 
 It's a simple [cli](src/main/scala/json2struct/cli/Cli.scala) tool. You can use it as:
 * `bin/json2struct --help`, show help message.
