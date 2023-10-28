@@ -1,5 +1,6 @@
 version := "0.1.0-SNAPSHOT"
 scalaVersion := "2.13.12"
+maintainer := "sleefd@gmail.com"
 
 lazy val root = (project in file("."))
   .settings(
@@ -16,4 +17,4 @@ libraryDependencies ++= Seq(
 
 enablePlugins(JavaAppPackaging, UniversalPlugin)
 Compile / mainClass := Some("json2struct.cli.Cli")
-Universal / mappings ++= Seq(file("README.MD") -> "README.md")
+Universal / mappings ++= Seq(file("README.md") -> "README.md")
