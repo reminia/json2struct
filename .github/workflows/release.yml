@@ -32,3 +32,5 @@ jobs:
 
       - name: publish packages
         run: sbt publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

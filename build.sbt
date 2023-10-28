@@ -24,8 +24,8 @@ publishMavenStyle := true
 credentials += Credentials(
   "GitHub Package Registry",
   "maven.pkg.github.com",
-  System.getenv("GITHUB_REPOSITORY_OWNER"),
-  System.getenv("GITHUB_TOKEN")
+  sys.env("GITHUB_REPOSITORY_OWNER"),
+  sys.env("GITHUB_TOKEN")
 )
 Compile / packageBin / publishArtifact := true
 
