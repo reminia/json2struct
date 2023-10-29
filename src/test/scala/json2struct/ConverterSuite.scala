@@ -66,6 +66,20 @@ class ConverterSuite extends AnyWordSpec {
           |
           |""".stripMargin)
 
+      seq.size should be(1)
+
+      // assert the top layer json
+      val map: Map[String, Any] = seq.head
+      map.keys should contain theSameElementsAs Seq("id", "object", "created", "model", "choices", "usage")
+
+      // assert struct parsed correctly
+      val usage: Map[String, Any] = map("usage").asInstanceOf[Map[String, Any]]
+      usage.keys should contain theSameElementsAs Seq("prompt_tokens", "completion_tokens", "total_tokens")
+
+      // assert array parsed correctly
+      val choices: Seq[Map[String, Any]] = map("choices").asInstanceOf[Seq[Map[String, Any]]]
+      choices.head.keys should contain theSameElementsAs Seq("index", "message", "finish_reason")
+
       noException shouldBe thrownBy {
         seq.foreach { m => println(m.print()) }
       }

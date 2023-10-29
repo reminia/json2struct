@@ -59,7 +59,6 @@ object RandomGen {
 
   def struct2map(s: Struct, given: Map[String, Struct]): Gen[Map[String, Any]] = {
     val seq: Seq[Gen[(String, Any)]] = s.fields.map { field =>
-      field.tag
       for {
         k <- Gen.const(jsonKey(field))
         v <- gotype2value(field.tpe, given)
@@ -75,7 +74,7 @@ object RandomGen {
       case Tag.Simple(props) =>
         val values = props.get("json")
         values.fold(name) { seq =>
-          val ret = seq.filter(x => SPECIAL_JSON_PROPS.contains(x))
+          val ret = seq.filter(x => !SPECIAL_JSON_PROPS.contains(x))
           ret.headOption.fold(name)(identity)
         }
       case _ => name
