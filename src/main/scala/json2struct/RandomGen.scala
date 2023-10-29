@@ -16,7 +16,15 @@ object RandomGen {
   // todo: compose two Gen, maybe Kleisli
   def apply[I, O](f: I => O): RandomGen[I, O] = (i: I) => f(i)
 
-  def gotype2value(tpe: GoType, given: Map[String, Struct]): Gen[Any] = {
+  def struct2map(ss: Seq[Struct]): Seq[Map[String, Any]] = {
+    val context = ss.map(s => s.name -> s).toMap
+    val graph = Graph.from(ss)
+    graph.sources.map(context.apply)
+      .map(s => struct2map(s, context).sample.get)
+      .toSeq
+  }
+
+  private def gotype2value(tpe: GoType, given: Map[String, Struct]): Gen[Any] = {
     tpe match {
       case GoInt => Gen.choose(0, 1000)
       case GoString => for {
@@ -36,28 +44,7 @@ object RandomGen {
     }
   }
 
-  def struct2map(ss: Seq[Struct]): Seq[Map[String, Any]] = {
-    val context = ss.map(s => s.name -> s).toMap
-    val nodes = Set.newBuilder[String]
-    val edges = Set.newBuilder[(String, String)]
-    ss.foreach { s =>
-      s.fields.foreach {
-        case f: Field.Struct =>
-          edges += (s.name -> f.name)
-          nodes += s.name += f.name
-        case Field.Simple(_, GoArray(tpe), _) if tpe.isStruct =>
-          edges += s.name -> tpe.desc
-          nodes += s.name += tpe.desc
-        case _ => ()
-      }
-    }
-    val graph = Graph(nodes.result(), edges.result())
-    graph.sources.map(context.apply)
-      .map(s => struct2map(s, context).sample.get)
-      .toSeq
-  }
-
-  def struct2map(s: Struct, given: Map[String, Struct]): Gen[Map[String, Any]] = {
+  private def struct2map(s: Struct, given: Map[String, Struct]): Gen[Map[String, Any]] = {
     val seq: Seq[Gen[(String, Any)]] = s.fields.map { field =>
       for {
         k <- Gen.const(jsonKey(field))
