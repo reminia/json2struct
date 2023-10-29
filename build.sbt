@@ -28,5 +28,8 @@ credentials += Credentials(
   System.getenv("GITHUB_REPOSITORY_OWNER"),
   System.getenv("GITHUB_TOKEN")
 )
-Compile / packageBin / publishArtifact := true
 
+Test / packageDoc / publishArtifact := false
+Test / packageSrc / publishArtifact := false
+Test / packageBin / publishArtifact := false
+Compile / packageDoc / publishArtifact := false
