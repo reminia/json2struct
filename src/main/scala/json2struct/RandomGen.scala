@@ -34,7 +34,7 @@ object RandomGen {
       case GoBool => Gen.oneOf(true, false)
       case GoInt32 => Gen.choose(1000, 100000)
       case GoUInt64 => Gen.choose(0L, Long.MaxValue)
-      case GoFloat32 => Gen.double
+      case GoFloat32 => Gen.double.map(_.toFloat)
       case GoArray(ele) => Gen.listOfN(3, gotype2value(ele, given))
       case GoStruct(name) =>
         given.get(name).fold[Gen[Any]](Gen.const(null))(s =>
