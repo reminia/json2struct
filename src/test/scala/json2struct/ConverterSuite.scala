@@ -38,7 +38,7 @@ class ConverterSuite extends AnyWordSpec {
     }
 
     "convert struct type to map(json object)" in {
-      val seq: Seq[Map[String, Any]] = Converter.convertStruct(
+      val seq: Seq[Any] = Converter.convertStruct(
         """
           |type OpenAiResponse struct {
           |	Id      string   `json:"id"`
@@ -69,7 +69,7 @@ class ConverterSuite extends AnyWordSpec {
       seq.size should be(1)
 
       // assert the top layer json
-      val map: Map[String, Any] = seq.head
+      val map: Map[String, Any] = seq.head.asInstanceOf[Map[String, Any]]
       map.keys should contain theSameElementsAs Seq("id", "object", "created", "model", "choices", "usage")
 
       // assert struct parsed correctly
@@ -81,7 +81,7 @@ class ConverterSuite extends AnyWordSpec {
       choices.head.keys should contain theSameElementsAs Seq("index", "message", "finish_reason")
 
       noException shouldBe thrownBy {
-        seq.foreach { m => println(m.print()) }
+        seq.foreach { m => println(m.asInstanceOf[Any].print()) }
       }
     }
   }

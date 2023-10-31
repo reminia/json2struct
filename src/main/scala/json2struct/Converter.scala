@@ -14,10 +14,10 @@ object Converter {
     convert(JsonMethods.parse(json), name)
   }
 
-  def convertStruct(struct: String): Seq[Map[String, Any]] = {
+  def convertStruct(struct: String): Seq[Any] = {
     GoStructParser
       .parse(struct)
-      .fold[Seq[Map[String, Any]]](Seq.empty) {
+      .fold[Seq[Any]](Seq.empty) {
         ss => RandomGen.struct2map(ss)
       }
   }

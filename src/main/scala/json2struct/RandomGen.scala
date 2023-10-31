@@ -5,18 +5,19 @@ import json2struct.GoType._
 import org.scalacheck.Gen
 
 import java.util
+import scala.collection.immutable.Seq
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 import scala.language.implicitConversions
 import scala.util.control.TailCalls
-import scala.util.control.TailCalls.{TailRec, tailcall}
+import scala.util.control.TailCalls.{TailRec, done, tailcall}
 
 object RandomGen {
 
-  def struct2map(ss: Seq[Struct]): Seq[Map[String, Any]] = {
+  def struct2map(ss: Seq[Struct]): Seq[Any] = {
     val context = ss.map(s => s.name -> s).toMap
     val graph = Graph.from(ss)
     graph.sources.map(context.apply)
-      .map(s => struct2map(s, context).sample.get)
+      .map(s => gotype2value(GoStruct(s.name), context).sample.get)
       .toSeq
   }
 
@@ -38,9 +39,32 @@ object RandomGen {
         case GoArray(ele) =>
           tailcall(go(ele)).map(g => Gen.listOfN(3, g))
         case GoStruct(name) =>
-          given.get(name).fold[Gen[Any]](Gen.const(null))(s =>
-            struct2map(s, given)
-          )
+          given.get(name).fold[TailRec[Gen[Any]]](done(Gen.const(null))) { s =>
+            val seq: Seq[Gen[TailRec[Gen[(String, Any)]]]] = s.fields.map { field =>
+              for {
+                k <- Gen.const(jsonKey(field))
+                v <- tailcall(go(field.tpe))
+              } yield v.map { x => k -> x }
+            }
+            val genSeq: Gen[util.ArrayList[TailRec[Gen[(String, Any)]]]] = Gen.sequence(seq)
+            val list: Iterable[TailRec[Gen[(String, Any)]]] = genSeq.sample.get.asScala
+            val res = list.foldLeft[TailRec[Gen[Map[String, Any]]]](done(Gen.const(Map.empty))) {
+              (m, tr) =>
+                val value: TailRec[Gen[Map[String, Any]]] = for {
+                  _m <- m
+                  t <- tr
+                } yield {
+                  for {
+                    mm <- _m
+                    tt <- t
+                  } yield {
+                    mm + tt
+                  }
+                }
+                value
+            }
+            res.asInstanceOf[TailRec[Gen[Any]]]
+          }
         case Unknown => Gen.const(null)
       }
     }
