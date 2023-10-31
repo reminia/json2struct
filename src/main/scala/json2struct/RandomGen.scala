@@ -72,17 +72,6 @@ object RandomGen {
     go(tpe).result
   }
 
-  private def struct2map(s: Struct, given: Map[String, Struct]): Gen[Map[String, Any]] = {
-    val seq: Seq[Gen[(String, Any)]] = s.fields.map { field =>
-      for {
-        k <- Gen.const(jsonKey(field))
-        v <- gotype2value(field.tpe, given)
-      } yield k -> v
-    }
-    val genSeq: Gen[util.ArrayList[(String, Any)]] = Gen.sequence(seq)
-    genSeq.map(_.asScala).map(_.toMap)
-  }
-
   def jsonKey(f: Field): String = {
     val Field(name, _, tag) = f
     tag match {
