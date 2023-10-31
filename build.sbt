@@ -5,7 +5,7 @@ maintainer := "sleefd@gmail.com"
 lazy val root = (project in file("."))
   .settings(
     name := "json2struct",
-    organization := "yceel.me"
+    organization := "me.yceel"
   )
 
 libraryDependencies ++= Seq(
