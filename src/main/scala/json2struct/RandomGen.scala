@@ -6,15 +6,11 @@ import org.scalacheck.Gen
 
 import java.util
 import scala.jdk.CollectionConverters.CollectionHasAsScala
-
-// Generate value of O based on value of I
-trait RandomGen[I, O] {
-  def gen(i: I): O
-}
+import scala.language.implicitConversions
+import scala.util.control.TailCalls
+import scala.util.control.TailCalls.{TailRec, tailcall}
 
 object RandomGen {
-  // todo: compose two Gen, maybe Kleisli
-  def apply[I, O](f: I => O): RandomGen[I, O] = (i: I) => f(i)
 
   def struct2map(ss: Seq[Struct]): Seq[Map[String, Any]] = {
     val context = ss.map(s => s.name -> s).toMap
@@ -25,23 +21,31 @@ object RandomGen {
   }
 
   private def gotype2value(tpe: GoType, given: Map[String, Struct]): Gen[Any] = {
-    tpe match {
-      case GoInt => Gen.choose(0, 1000)
-      case GoString => for {
-        length <- Gen.choose(1, 8)
-        chars <- Gen.listOfN(length, Gen.alphaNumChar)
-      } yield chars.mkString
-      case GoBool => Gen.oneOf(true, false)
-      case GoInt32 => Gen.choose(1000, 100000)
-      case GoUInt64 => Gen.choose(0L, Long.MaxValue)
-      case GoFloat32 => Gen.double.map(_.toFloat)
-      case GoArray(ele) => Gen.listOfN(3, gotype2value(ele, given))
-      case GoStruct(name) =>
-        given.get(name).fold[Gen[Any]](Gen.const(null))(s =>
-          struct2map(s, given)
-        )
-      case Unknown => Gen.const(null)
+
+    implicit def toTailRec[A](a: A): TailRec[A] = TailCalls.done(a)
+
+    def go(tpe: GoType): TailRec[Gen[Any]] = {
+      tpe match {
+        case GoInt => Gen.choose(0, 1000)
+        case GoString => for {
+          length <- Gen.choose(1, 8)
+          chars <- Gen.listOfN(length, Gen.alphaNumChar)
+        } yield chars.mkString
+        case GoBool => Gen.oneOf(true, false)
+        case GoInt32 => Gen.choose(1000, 100000)
+        case GoUInt64 => Gen.choose(0L, Long.MaxValue)
+        case GoFloat32 => Gen.double.map(_.toFloat)
+        case GoArray(ele) =>
+          tailcall(go(ele)).map(g => Gen.listOfN(3, g))
+        case GoStruct(name) =>
+          given.get(name).fold[Gen[Any]](Gen.const(null))(s =>
+            struct2map(s, given)
+          )
+        case Unknown => Gen.const(null)
+      }
     }
+
+    go(tpe).result
   }
 
   private def struct2map(s: Struct, given: Map[String, Struct]): Gen[Map[String, Any]] = {
