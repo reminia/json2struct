@@ -9,7 +9,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class RandomGenSuite extends AnyWordSpec with PrivateMethodTester {
 
   "RandomGen" when {
-    "convert deep nested GoType" should {
+    "generate data of deep nested GoType" should {
       "not stackoverflow" in {
         val deepArray: GoType = (1 to 10000).foldLeft[GoType](GoInt) {
           (acc, _) => GoArray(acc)
