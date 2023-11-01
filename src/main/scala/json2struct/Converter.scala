@@ -18,7 +18,7 @@ object Converter {
     GoStructParser
       .parse(struct)
       .fold[Seq[Any]](Seq.empty) {
-        ss => RandomGen.struct2map(ss)
+        ss => RandomGen.genStructs(ss)
       }
   }
 

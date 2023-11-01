@@ -11,7 +11,8 @@ import scala.util.control.TailCalls.{TailRec, done, tailcall}
 
 object RandomGen {
 
-  def struct2map(ss: Seq[Struct]): Seq[Any] = {
+  // Seq[Any] is actually Seq[Map[String, Any]]
+  def genStructs(ss: Seq[Struct]): Seq[Any] = {
     val context = ss.map(s => s.name -> s).toMap
     val graph = Graph.from(ss)
     graph.sources.map(context.apply)
