@@ -4,9 +4,7 @@ import json2struct.GoStructAST.{Field, Struct, Tag}
 import json2struct.GoType._
 import org.scalacheck.Gen
 
-import java.util
 import scala.collection.immutable.Seq
-import scala.jdk.CollectionConverters.CollectionHasAsScala
 import scala.language.implicitConversions
 import scala.util.control.TailCalls
 import scala.util.control.TailCalls.{TailRec, done, tailcall}
@@ -38,34 +36,29 @@ object RandomGen {
         case GoFloat32 => Gen.double.map(_.toFloat)
         case GoArray(ele) =>
           tailcall(go(ele)).map(g => Gen.listOfN(3, g))
-        case GoStruct(name) =>
-          given.get(name).fold[TailRec[Gen[Any]]](done(Gen.const(null))) { s =>
-            val seq: Seq[Gen[TailRec[Gen[(String, Any)]]]] = s.fields.map { field =>
-              for {
-                k <- Gen.const(jsonKey(field))
-                v <- tailcall(go(field.tpe))
-              } yield v.map { x => k -> x }
-            }
-            val genSeq: Gen[util.ArrayList[TailRec[Gen[(String, Any)]]]] = Gen.sequence(seq)
-            val list: Iterable[TailRec[Gen[(String, Any)]]] = genSeq.sample.get.asScala
-            val res = list.foldLeft[TailRec[Gen[Map[String, Any]]]](done(Gen.const(Map.empty))) {
-              (m, tr) =>
-                val value: TailRec[Gen[Map[String, Any]]] = for {
-                  _m <- m
-                  t <- tr
-                } yield {
-                  for {
-                    mm <- _m
-                    tt <- t
-                  } yield {
-                    mm + tt
-                  }
-                }
-                value
-            }
-            res.asInstanceOf[TailRec[Gen[Any]]]
-          }
+        case s@GoStruct(_) =>
+          struct2map(s).asInstanceOf[TailRec[Gen[Any]]]
         case Unknown => Gen.const(null)
+      }
+    }
+
+    def struct2map(tpe: GoStruct): TailRec[Gen[Map[String, Any]]] = {
+      given.get(tpe.name).fold[TailRec[Gen[Map[String, Any]]]](done(Gen.const(null))) {
+        struct =>
+          val seq = struct.fields.map { field =>
+            tailcall(go(field.tpe)).map(
+              _.map(v => jsonKey(field) -> v)
+            )
+          }
+          seq.foldRight[TailRec[Gen[Map[String, Any]]]](done(Gen.const(Map.empty))) {
+            (trTuple, trMap) =>
+              for {
+                genMap <- trMap
+                genTuple <- trTuple
+              } yield {
+                genMap.flatMap(map => genTuple.map(tuple => map + tuple))
+              }
+          }
       }
     }
 

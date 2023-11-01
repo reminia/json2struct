@@ -81,7 +81,7 @@ class ConverterSuite extends AnyWordSpec {
       choices.head.keys should contain theSameElementsAs Seq("index", "message", "finish_reason")
 
       noException shouldBe thrownBy {
-        seq.foreach { m => println(m.asInstanceOf[Any].print()) }
+        seq.foreach { m => println(m.print()) }
       }
     }
   }

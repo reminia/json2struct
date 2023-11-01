@@ -2,8 +2,8 @@ package json2struct
 
 import json2struct.GoStructAST.{Field, Struct, Tag}
 import json2struct.Printer.Syntax.toPrinterOps
-import org.json4s.{Formats, NoTypeHints}
 import org.json4s.native.Serialization
+import org.json4s.{Formats, NoTypeHints}
 
 import scala.language.implicitConversions
 
@@ -88,16 +88,11 @@ object Printer {
     }
   }
 
-  implicit object MapPrinter extends Printer[Any] {
+  implicit object AnyJsonPrinter extends Printer[Any] {
 
     override def print(map: Any): String = {
       implicit val formats: Formats = Serialization.formats(NoTypeHints)
       Serialization.write(map)
     }
   }
-
-  //  implicit object ThreadSafePrinter extends Printer[Any] {
-  //    import upickle.default._
-  //    override def print(t: Map[String, Any]): String = write(t)
-  //  }
 }
