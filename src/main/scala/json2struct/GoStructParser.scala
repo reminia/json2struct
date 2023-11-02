@@ -1,7 +1,6 @@
 package json2struct
 
 import json2struct.GoStructAST.{Field, Struct, Tag}
-import json2struct.GoStructParser.opt
 import json2struct.GoType.GoArray
 
 import scala.collection.mutable
@@ -50,13 +49,10 @@ object GoStructParser extends JavaTokenParsers {
 
   def curly[T](in: Parser[T]): Parser[T] = "{" ~> in <~ "}"
 
-  lazy val lineComment: Parser[String] = "//" ~ "[^\n]+".r.? ^^ {
-    case _ ~ comment => comment.fold("")(identity)
-  }
+  lazy val lineComment: Parser[String] = log("//.*".r)("single")
 
-  lazy val multilineComment: Parser[String] = log("/*")("start") ~ log("(?s).+".r.?)("inside") ~ log("*/")("end") ^^ {
-    case _ ~ comment ~ _ => comment.fold("")(identity)
-  }
+  // todo: nested /* style check
+  lazy val multilineComment: Parser[String] = log("""/\*.*(\n*.*)*\*/""".r)("multiline")
 
   lazy val struct: Parser[Struct] = ("type" ~> ident ~ "struct" ~ curly(field.*)) ^^ {
     case name ~ _ ~ seq => Struct(name, seq)
