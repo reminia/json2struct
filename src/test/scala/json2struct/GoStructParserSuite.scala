@@ -1,5 +1,6 @@
 package json2struct
 
+import json2struct.GoStructParser.{lineComment, multilineComment}
 import org.scalatest.matchers.should.Matchers._
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -36,6 +37,46 @@ class GoStructParserSuite extends AnyWordSpec {
 
       val usage = map("OpenAiResponse").fields.filter(_.name == "Usage")
       usage.head.isStruct should be(true)
+    }
+  }
+
+  "parse single line comment" in {
+    val input1 =
+      """
+        |// line comment
+        |abcdef
+        |""".stripMargin
+    val res = parse(lineComment, input1)
+    res should not be None
+    res.get should include("line comment")
+    res.get should not include "abc"
+
+    val input2 =
+      """////// abc
+        |""".stripMargin
+    parse(lineComment, input2).get should include("abc")
+  }
+
+  "parse multiline comment" in {
+    val input =
+      """
+        |/**
+        |  line comment
+        |  hello world
+        |*/
+        |lalalala
+        |""".stripMargin
+    val res = parse(multilineComment, input)
+    res should not be None
+    res.get should include("line comment")
+    res.get should include("hello world")
+    res.get should not include "lala"
+  }
+
+  def parse[T](p: GoStructParser.Parser[T], input: String): Option[T] = {
+    GoStructParser.parse(p, input) match {
+      case GoStructParser.Success(res, _) => Option(res)
+      case _ => None
     }
   }
 
