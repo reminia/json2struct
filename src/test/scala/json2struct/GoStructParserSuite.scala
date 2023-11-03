@@ -7,6 +7,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class GoStructParserSuite extends AnyWordSpec {
 
   "Go struct parser" should {
+
     "parse openai struct types" in {
       val option = GoStructParser.parse(
         """
@@ -38,39 +39,58 @@ class GoStructParserSuite extends AnyWordSpec {
       val usage = map("OpenAiResponse").fields.filter(_.name == "Usage")
       usage.head.isStruct should be(true)
     }
-  }
 
-  "parse single line comment" in {
-    val input1 =
-      """
-        |// line comment
-        |abcdef
-        |""".stripMargin
-    val res = parse(lineComment, input1)
-    res should not be None
-    res.get should include("line comment")
-    res.get should not include "abc"
+    "parse single line comment" in {
+      val input1 =
+        """
+          |// line comment
+          |abcdef
+          |""".stripMargin
+      val res = parse(lineComment, input1)
+      res should not be None
+      res.get should include("line comment")
+      res.get should not include "abc"
 
-    val input2 =
-      """////// abc
-        |""".stripMargin
-    parse(lineComment, input2).get should include("abc")
-  }
+      val input2 =
+        """////// abc
+          |""".stripMargin
+      parse(lineComment, input2).get should include("abc")
+    }
 
-  "parse multiline comment" in {
-    val input =
-      """
-        |/**
-        |  line comment
-        |  hello world
-        |*/
-        |lalalala
-        |""".stripMargin
-    val res = parse(multilineComment, input)
-    res should not be None
-    res.get should include("line comment")
-    res.get should include("hello world")
-    res.get should not include "lala"
+    "parse multiline comment" in {
+      val input =
+        """
+          |/**
+          |  line comment
+          |  hello world
+          |*/
+          |lalalala
+          |""".stripMargin
+      val res = parse(multilineComment, input)
+      res should not be None
+      res.get should include("line comment")
+      res.get should include("hello world")
+      res.get should not include "lala"
+
+      val nested =
+        """
+          |/**
+          |/*
+          |hello world
+          |*/
+          |""".stripMargin
+      parse(multilineComment, nested) shouldBe None
+
+      val paired =
+        """
+          |/**
+          |hi
+          |/* hello world */
+          |hi
+          |**/
+          |""".stripMargin
+      parse(multilineComment, paired) should not be None
+    }
   }
 
   def parse[T](p: GoStructParser.Parser[T], input: String): Option[T] = {

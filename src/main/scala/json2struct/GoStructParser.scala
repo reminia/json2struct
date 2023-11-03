@@ -51,8 +51,11 @@ object GoStructParser extends JavaTokenParsers {
 
   lazy val lineComment: Parser[String] = log("//.*".r)("single")
 
-  // todo: nested /* style check
-  lazy val multilineComment: Parser[String] = log("""/\*.*(\n*.*)*\*/""".r)("multiline")
+  lazy val multiline: Parser[String] = log("""/\*.*(\n*.*)*\*/""".r)("multiline")
+
+  lazy val start: Parser[String] = "\n*.+\n*".r <~ "/*"
+
+  lazy val multilineComment: Parser[String] = multiline - log(start)("start")
 
   lazy val struct: Parser[Struct] = ("type" ~> ident ~ "struct" ~ curly(field.*)) ^^ {
     case name ~ _ ~ seq => Struct(name, seq)
