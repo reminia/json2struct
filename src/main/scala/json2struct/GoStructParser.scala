@@ -26,7 +26,7 @@ object GoStructParser extends JavaTokenParsers {
   lazy val tag: Parser[Tag] = "`" ~ pair.* <~ "`" ^^ {
     case _ ~ seq if seq.isEmpty => Tag.None
     case _ ~ seq =>
-      var map = mutable.Map.empty[String, Seq[String]]
+      val map = mutable.Map.empty[String, Seq[String]]
       seq.foreach {
         case (key, values) =>
           val seq = map.getOrElse(key, Seq.empty)
@@ -52,11 +52,10 @@ object GoStructParser extends JavaTokenParsers {
   lazy val lineComment: Parser[String] = log("//.*".r)("single")
 
   lazy val multiline: Parser[String] = log("""/\*.*(\n*.*)*\*/""".r)("multiline")
+  lazy val nested: Parser[String] = """/\*.*(\n*.*)*/\*""".r
+  lazy val multilineComment: Parser[String] = multiline - log(nested)("nest")
 
-  lazy val start: Parser[String] = "\n*.+\n*".r <~ "/*"
-
-  lazy val multilineComment: Parser[String] = multiline - log(start)("start")
-
+  lazy val test: Parser[String] = ".+".r <~ "/*" ^^ (_.mkString)
   lazy val struct: Parser[Struct] = ("type" ~> ident ~ "struct" ~ curly(field.*)) ^^ {
     case name ~ _ ~ seq => Struct(name, seq)
   }

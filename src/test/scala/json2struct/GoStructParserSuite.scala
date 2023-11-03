@@ -74,22 +74,25 @@ class GoStructParserSuite extends AnyWordSpec {
 
       val nested =
         """
-          |/**
+          |/*
+          |hi
           |/*
           |hello world
           |*/
           |""".stripMargin
       parse(multilineComment, nested) shouldBe None
 
+      // go comment doesn't support nested style comment
+      // but java support it
       val paired =
-        """
-          |/**
-          |hi
-          |/* hello world */
-          |hi
-          |**/
-          |""".stripMargin
-      parse(multilineComment, paired) should not be None
+      """
+        |/**
+        |hi
+        |/* hello world */
+        |hi
+        |**/
+        |""".stripMargin
+      parse(multilineComment, paired) shouldBe None
     }
   }
 
