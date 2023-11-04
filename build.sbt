@@ -2,14 +2,16 @@ import Build.{noPublish, publishSettings}
 
 name := "json2struct"
 
-val currVersion = "0.3.0-SNAPSHOT"
+val projectVersion = "0.3.0-SNAPSHOT"
 val scala2version = "2.13.12"
+val javaVersion = "11"
 
 val commonSettings = Seq(
-  version := currVersion,
+  version := projectVersion,
   scalaVersion := scala2version,
   maintainer := "sleefd@gmail.com",
-  organization := "me.yceel.json2struct"
+  organization := "me.yceel.json2struct",
+  javacOptions := Seq("-source", javaVersion, "-target", javaVersion),
 )
 
 lazy val root = project
