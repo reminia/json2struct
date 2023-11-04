@@ -48,3 +48,19 @@ lazy val cli = project
     Universal / mappings ++= Seq(file("README.md") -> "README.md")
   )
   .dependsOn(core)
+
+lazy val api = project
+  .in(file("api"))
+  .settings(moduleName := "api")
+  .enablePlugins(JavaServerAppPackaging, UniversalPlugin)
+  .settings(commonSettings: _*)
+  .settings(publishSettings: _*)
+  .settings(
+    resolvers += "Akka repo".at("https://repo.akka.io/maven"),
+    libraryDependencies ++= Seq(
+      "com.typesafe.akka" %% "akka-http" % "10.5.3"
+    ),
+    mainClass := Some("json2struct.api.Server"),
+    Universal / mappings ++= Seq(file("README.md") -> "README.md")
+  )
+  .dependsOn(core)
