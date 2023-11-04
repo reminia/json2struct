@@ -58,7 +58,9 @@ lazy val api = project
   .settings(
     resolvers += "Akka repo".at("https://repo.akka.io/maven"),
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-http" % "10.5.3"
+      "com.typesafe.akka" %% "akka-http" % "10.6.0",
+      "com.typesafe.akka" %% "akka-stream" % "2.9.0",
+      "com.typesafe" % "config" % "1.4.3"
     ),
     mainClass := Some("json2struct.api.Server"),
     Universal / mappings ++= Seq(file("README.md") -> "README.md")
