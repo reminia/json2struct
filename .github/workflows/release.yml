@@ -26,7 +26,7 @@ jobs:
       - name: release zip
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "target/universal/json2struct*.zip"
+          artifacts: "cli/target/universal/cli*.zip"
           name: ${{ vars.RELEASE_VERSION }}
           tag: ${{ vars.RELEASE_VERSION }}
           allowUpdates: true
