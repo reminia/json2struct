@@ -45,7 +45,7 @@ lazy val cli = project
       "org.rogach" %% "scallop" % "5.0.0"
     ),
     mainClass := Some("json2struct.cli.Cli"),
-    Universal / mappings ++= Seq(file("README.md") -> "README.md")
+    Universal / mappings ++= Seq(file("cli/README.md") -> "README.md")
   )
   .dependsOn(core)
 
@@ -63,6 +63,9 @@ lazy val api = project
       "com.typesafe" % "config" % "1.4.3"
     ),
     mainClass := Some("json2struct.api.Server"),
-    Universal / mappings ++= Seq(file("README.md") -> "README.md")
+    Universal / mappings ++= Seq(file("api/README.md") -> "README.md"),
+    bashScriptExtraDefines ++= Seq(
+      "export JSON2STRUCT_HOME=$app_home/../"
+    )
   )
   .dependsOn(core)
