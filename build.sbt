@@ -1,4 +1,4 @@
-import Build.noPublish
+import Build.{noPublish, publishSettings}
 
 name := "json2struct"
 version := "0.3.0-SNAPSHOT"
@@ -13,7 +13,6 @@ val commonSettings = Seq(
 
 lazy val root = project
   .in(file("."))
-  .settings(commonSettings: _*)
   .settings(moduleName := "root")
   .settings(noPublish: _*)
   .aggregate(core, cli)
@@ -21,9 +20,10 @@ lazy val root = project
 
 lazy val core = project
   .in(file("core"))
-  .settings(commonSettings: _*)
-  .enablePlugins(JavaAppPackaging, UniversalPlugin)
+  .enablePlugins(JavaAppPackaging)
   .settings(moduleName := "core")
+  .settings(commonSettings: _*)
+  .settings(publishSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
       "org.json4s" %% "json4s-native" % "4.0.6",
@@ -34,30 +34,17 @@ lazy val core = project
 
 lazy val cli = project
   .in(file("cli"))
-  .settings(commonSettings: _*)
   .enablePlugins(JavaAppPackaging, UniversalPlugin)
-  .dependsOn(core)
   .settings(moduleName := "cli")
-  .settings(noPublish: _*)
+  .settings(commonSettings: _*)
+  .settings(publishSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
       "org.rogach" %% "scallop" % "5.0.0"
-    )
+    ),
+    Compile / mainClass := Some("json2struct.cli.Cli")
   )
+  .dependsOn(core)
 
-//Compile / mainClass := Some("json2struct.cli.Cli")
 //Universal / mappings ++= Seq(file("README.md") -> "README.md")
 //
-//publishTo := Some("Github repo" at "https://maven.pkg.github.com/" + System.getenv("GITHUB_REPOSITORY"))
-//publishMavenStyle := true
-//credentials += Credentials(
-//  "GitHub Package Registry",
-//  "maven.pkg.github.com",
-//  System.getenv("GITHUB_REPOSITORY_OWNER"),
-//  System.getenv("GITHUB_TOKEN")
-//)
-//
-//Test / packageDoc / publishArtifact := false
-//Test / packageSrc / publishArtifact := false
-//Test / packageBin / publishArtifact := false
-//Compile / packageDoc / publishArtifact := false
