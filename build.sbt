@@ -1,14 +1,15 @@
 import Build.{noPublish, publishSettings}
 
 name := "json2struct"
-version := "0.3.0-SNAPSHOT"
-organization := "me.yceel.json2struct"
-maintainer := "sleefd@gmail.com"
 
+val currVersion = "0.3.0-SNAPSHOT"
 val scala2version = "2.13.12"
 
 val commonSettings = Seq(
-  scalaVersion := scala2version
+  version := currVersion,
+  scalaVersion := scala2version,
+  maintainer := "sleefd@gmail.com",
+  organization := "me.yceel.json2struct"
 )
 
 lazy val root = project
@@ -20,8 +21,8 @@ lazy val root = project
 
 lazy val core = project
   .in(file("core"))
-  .enablePlugins(JavaAppPackaging)
   .settings(moduleName := "core")
+  .enablePlugins(JavaAppPackaging)
   .settings(commonSettings: _*)
   .settings(publishSettings: _*)
   .settings(
@@ -34,8 +35,8 @@ lazy val core = project
 
 lazy val cli = project
   .in(file("cli"))
-  .enablePlugins(JavaAppPackaging, UniversalPlugin)
   .settings(moduleName := "cli")
+  .enablePlugins(JavaAppPackaging, UniversalPlugin)
   .settings(commonSettings: _*)
   .settings(publishSettings: _*)
   .settings(
