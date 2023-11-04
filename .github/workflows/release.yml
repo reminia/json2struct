@@ -23,10 +23,18 @@ jobs:
       - name: build zip
         run: sbt universal:packageBin
 
-      - name: release zip
+      - name: release cli zip
         uses: ncipollo/release-action@v1
         with:
           artifacts: "cli/target/universal/cli*.zip"
+          name: ${{ vars.RELEASE_VERSION }}
+          tag: ${{ vars.RELEASE_VERSION }}
+          allowUpdates: true
+
+      - name: release api zip
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "api/target/universal/api*.zip"
           name: ${{ vars.RELEASE_VERSION }}
           tag: ${{ vars.RELEASE_VERSION }}
           allowUpdates: true
