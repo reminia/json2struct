@@ -18,7 +18,6 @@ lazy val root = project
   .settings(noPublish: _*)
   .aggregate(core, cli)
 
-
 lazy val core = project
   .in(file("core"))
   .settings(moduleName := "core")
@@ -43,9 +42,7 @@ lazy val cli = project
     libraryDependencies ++= Seq(
       "org.rogach" %% "scallop" % "5.0.0"
     ),
-    Compile / mainClass := Some("json2struct.cli.Cli")
+    mainClass := Some("json2struct.cli.Cli"),
+    Universal / mappings ++= Seq(file("README.md") -> "README.md")
   )
   .dependsOn(core)
-
-//Universal / mappings ++= Seq(file("README.md") -> "README.md")
-//
