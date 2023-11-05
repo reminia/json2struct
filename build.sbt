@@ -18,7 +18,7 @@ lazy val root = project
   .in(file("."))
   .settings(moduleName := "root")
   .settings(noPublish: _*)
-  .aggregate(core, cli)
+  .aggregate(core, cli, api)
 
 lazy val core = project
   .in(file("core"))
