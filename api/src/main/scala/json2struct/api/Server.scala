@@ -15,23 +15,24 @@ object Server extends Directives with JsonSupport {
     implicit val system = ActorSystem("server", APP_CONF)
 
     val route = concat(
-      path("v1" / "convert" / "json") {
-        post {
-          entity(as[Json]) { json =>
-            complete {
-              Converter.convertJson(json.json, json.name)
-                .map(_.print())
-                .mkString(System.lineSeparator())
+      pathPrefix("v1" / "convert") {
+        path("json") {
+          post {
+            entity(as[Json]) { json =>
+              complete {
+                Converter.convertJson(json.json, json.name)
+                  .map(_.print())
+                  .mkString(System.lineSeparator())
+              }
             }
           }
-        }
-      },
-
-      path("v1" / "convert" / "struct") {
-        post {
-          entity(as[String]) { struct =>
-            complete {
-              Converter.convertStruct(struct).map(_.print()).mkString(System.lineSeparator())
+        } ~
+        path("struct") {
+          post {
+            entity(as[String]) { struct =>
+              complete {
+                Converter.convertStruct(struct).map(_.print()).mkString(System.lineSeparator())
+              }
             }
           }
         }
