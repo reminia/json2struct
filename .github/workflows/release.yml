@@ -30,6 +30,7 @@ jobs:
           name: ${{ vars.RELEASE_VERSION }}
           tag: ${{ vars.RELEASE_VERSION }}
           allowUpdates: true
+          removeArtifacts: true
 
       - name: release api zip
         uses: ncipollo/release-action@v1
@@ -38,6 +39,7 @@ jobs:
           name: ${{ vars.RELEASE_VERSION }}
           tag: ${{ vars.RELEASE_VERSION }}
           allowUpdates: true
+          removeArtifacts: true
 
       - name: publish packages
         run: sbt publish
