@@ -2,8 +2,6 @@ package json2struct.cli
 
 import json2struct.Converter
 import json2struct.Printer.Syntax.toPrinterOps
-import org.json4s.native.Serialization
-import org.json4s.{Formats, NoTypeHints}
 import org.rogach.scallop.ScallopConf
 
 
@@ -30,10 +28,9 @@ object Cli {
         .map(_.print())
         .foreach(println)
     } else {
-      implicit val formats: Formats = Serialization.formats(NoTypeHints)
       Converter
         .convertStruct(content)
-        .map { m => Serialization.write(m) }
+        .map(_.print())
         .foreach(println)
     }
   }
