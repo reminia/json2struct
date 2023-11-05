@@ -22,4 +22,6 @@ object Build {
     Test / packageBin / publishArtifact := false,
     Compile / packageDoc / publishArtifact := false
   )
+
+  val AkkaHttpVersion = "10.6.0"
 }

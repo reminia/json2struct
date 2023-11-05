@@ -1,4 +1,4 @@
-import Build.{noPublish, publishSettings}
+import Build.{AkkaHttpVersion, noPublish, publishSettings}
 
 name := "json2struct"
 
@@ -58,7 +58,8 @@ lazy val api = project
   .settings(
     resolvers += "Akka repo".at("https://repo.akka.io/maven"),
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-http" % "10.6.0",
+      "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
+      "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion,
       "com.typesafe.akka" %% "akka-stream" % "2.9.0",
       "com.typesafe" % "config" % "1.4.3"
     ),
