@@ -5,6 +5,7 @@ name := "json2struct"
 val projectVersion = "0.3.0-SNAPSHOT"
 val scala2version = "2.13.12"
 val javaVersion = "11"
+val apiDockerVersion = "0.1"
 
 val commonSettings = Seq(
   version := projectVersion,
@@ -52,7 +53,7 @@ lazy val cli = project
 lazy val api = project
   .in(file("api"))
   .settings(moduleName := "api")
-  .enablePlugins(JavaServerAppPackaging, UniversalPlugin)
+  .enablePlugins(JavaServerAppPackaging, UniversalPlugin, DockerPlugin)
   .settings(commonSettings: _*)
   .settings(publishSettings: _*)
   .settings(
@@ -67,6 +68,10 @@ lazy val api = project
     Universal / mappings ++= Seq(file("api/README.md") -> "README.md"),
     bashScriptExtraDefines ++= Seq(
       "export JSON2STRUCT_HOME=$app_home/../"
-    )
+    ),
+    Docker / packageName := "json2struct-api",
+    Docker / version := apiDockerVersion,
+    dockerBaseImage := "openjdk:11",
+    dockerExposedPorts ++= Seq(8080)
   )
   .dependsOn(core)
