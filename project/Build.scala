@@ -1,5 +1,11 @@
+import com.typesafe.sbt.packager.Keys.dockerRepository
+import com.typesafe.sbt.packager.docker.Cmd
+import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.Docker
 import sbt.*
 import sbt.Keys.*
+
+import scala.io.Source
+import scala.util.Using
 
 object Build {
   val noPublish = Seq(
@@ -24,4 +30,18 @@ object Build {
   )
 
   val AkkaHttpVersion = "10.6.0"
+
+  val commonDockerSettings = Seq(
+    Docker / dockerRepository := Some("ghcr.io/reminia")
+  )
+
+  def dockerfile(file: String): Seq[Cmd] = {
+    Using.resource(Source.fromFile(file)) { src =>
+      src.getLines().filter(_.nonEmpty).map {
+        line =>
+          val splits = line.split("\\s+")
+          Cmd(splits.head, splits.tail.mkString(" "))
+      }.toList
+    }
+  }
 }
