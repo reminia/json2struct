@@ -8,3 +8,8 @@ A simple rest api that servers the conversion between json data and struct type.
    it is something like {"name": "RootType", "json":"xxxx"}.
 2. `POST /v1/convert/struct`, convert struct to json. The request body is plain text of struct types you want to convert.
 3. `GET /health`, server healthy status query.
+
+## Docker
+Docker image is built using the sbt-native-packager/docker plugin.
+* Run `sbt docker:publishLocal` to build the image.
+* Start the container by `docker run -d  -p 8081:8080 ghcr.io/reminia/json2struct-api:0.1`.
