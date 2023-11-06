@@ -1,4 +1,4 @@
-import Build.{AkkaHttpVersion, noPublish, publishSettings}
+import Build.*
 
 name := "json2struct"
 
@@ -63,15 +63,19 @@ lazy val api = project
       "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion,
       "com.typesafe.akka" %% "akka-stream" % "2.9.0",
       "com.typesafe" % "config" % "1.4.3"
-    ),
+    ))
+  .settings(
     mainClass := Some("json2struct.api.Server"),
     Universal / mappings ++= Seq(file("api/README.md") -> "README.md"),
     bashScriptExtraDefines ++= Seq(
       "export JSON2STRUCT_HOME=$app_home/../"
     ),
+  )
+  .settings(commonDockerSettings: _*)
+  .settings(
     Docker / packageName := "json2struct-api",
     Docker / version := apiDockerVersion,
-    dockerBaseImage := "openjdk:11",
-    dockerExposedPorts ++= Seq(8080)
+    dockerCommands := Seq(),
+    dockerCommands ++= dockerfile("api/docker/Dockerfile")
   )
   .dependsOn(core)
