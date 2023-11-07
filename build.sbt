@@ -7,26 +7,29 @@ val scala2version = "2.13.12"
 val javaVersion = "11"
 val apiDockerVersion = "0.1"
 
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
 val commonSettings = Seq(
   version := projectVersion,
   scalaVersion := scala2version,
   maintainer := "sleefd@gmail.com",
   organization := "me.yceel.json2struct",
   javacOptions := Seq("-source", javaVersion, "-target", javaVersion),
+  scalacOptions ++= Seq("-Xsource:3")
 )
 
 lazy val root = project
   .in(file("."))
   .settings(moduleName := "root")
-  .settings(noPublish: _*)
+  .settings(noPublish *)
   .aggregate(core, cli, api)
 
 lazy val core = project
   .in(file("core"))
   .settings(moduleName := "core")
   .enablePlugins(JavaAppPackaging)
-  .settings(commonSettings: _*)
-  .settings(publishSettings: _*)
+  .settings(commonSettings *)
+  .settings(publishSettings *)
   .settings(
     libraryDependencies ++= Seq(
       "org.json4s" %% "json4s-native" % "4.0.6",
@@ -39,8 +42,8 @@ lazy val cli = project
   .in(file("cli"))
   .settings(moduleName := "cli")
   .enablePlugins(JavaAppPackaging, UniversalPlugin)
-  .settings(commonSettings: _*)
-  .settings(publishSettings: _*)
+  .settings(commonSettings *)
+  .settings(publishSettings *)
   .settings(
     libraryDependencies ++= Seq(
       "org.rogach" %% "scallop" % "5.0.0"
@@ -54,8 +57,8 @@ lazy val api = project
   .in(file("api"))
   .settings(moduleName := "api")
   .enablePlugins(JavaServerAppPackaging, UniversalPlugin, DockerPlugin)
-  .settings(commonSettings: _*)
-  .settings(publishSettings: _*)
+  .settings(commonSettings *)
+  .settings(publishSettings *)
   .settings(
     resolvers += "Akka repo".at("https://repo.akka.io/maven"),
     libraryDependencies ++= Seq(
@@ -71,7 +74,7 @@ lazy val api = project
       "export JSON2STRUCT_HOME=$app_home/../"
     ),
   )
-  .settings(commonDockerSettings: _*)
+  .settings(commonDockerSettings *)
   .settings(
     Docker / packageName := "json2struct-api",
     Docker / version := apiDockerVersion,
