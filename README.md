@@ -9,16 +9,18 @@ It's needed frequently to convert between http request/response body and struct 
 
 ## Build & Run
 
-* `sbt compile`, compile it.
+* `sbt compile test`, compile and test it.
 * `sbt universal:packageBin`, package the zip which lies in target/universal folder.
 * unzip the [zip](https://github.com/reminia/json2struct/releases) package,
  run it by `bin/json2struct` script.
 
-It's a simple [cli](src/main/scala/json2struct/cli/Cli.scala) tool. You can use it as:
-* `bin/json2struct --help`, show help message.
-* `bin/json2struct "struct content"`. It converts struct to random json data.
-* `bin/json2struct -j name "json content"`. It converts json to struct types,
- name is the top struct type name.
+## Modules
+
+There are 3 modules:
+* core, the core conversion logic.
+* cil, a simple cli tool that converts between json and struct type, a zip is released for this module.
+* api, a simple rest api that serves the conversion.
+ I have released both a zip and a docker image for ease usage.
 
 ## Samples
 
