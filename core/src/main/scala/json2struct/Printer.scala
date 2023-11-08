@@ -13,7 +13,7 @@ trait Printer[T] {
 
 object Printer {
 
-  def blank(n: Int = 1): String = " " * n
+  def space(n: Int = 1): String = " " * n
 
   def quote(str: String): String = "\"" + str + "\""
 
@@ -21,7 +21,7 @@ object Printer {
 
   def backtick(in: String): String = "`" + in + "`"
 
-  def indent(num: Int = 4): String = blank(num)
+  def indent(num: Int = 4): String = space(num)
 
   def newline = "\n"
 
@@ -50,7 +50,7 @@ object Printer {
       case Tag.Simple(props) =>
         val tags = props
           .map { case (k, v) => colon(k, quote(v.mkString(","))) }
-          .mkString(blank())
+          .mkString(space())
         backtick(tags)
     }
   }
