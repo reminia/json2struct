@@ -4,10 +4,10 @@ A simple rest api that servers the conversion between json data and struct type.
 
 3 endpoints:
 
-1. `POST /v1/covert/json`, convert json to struct. The request body is json format,
-   it is something like {"name": "RootType", "json":"xxxx"}.
+1. `POST /v1/convert/json`, convert json to struct. The request body is json format,
+ like {"name": "RootType", "json":"xxxx"}.
 2. `POST /v1/convert/struct`, convert struct to json. The request body is plain text of struct types you want to convert.
-3. `GET /health`, server healthy status query.
+3. `GET /health`, query server healthy status.
 
 ## Docker
 Docker image is built using the sbt-native-packager/docker plugin.
