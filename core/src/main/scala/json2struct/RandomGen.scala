@@ -1,8 +1,8 @@
 package json2struct
 
 import json2struct.GoStructAST.{Field, Struct, Tag}
-import json2struct.GoType._
-import org.scalacheck.Gen
+import json2struct.GoType.*
+import org.scalacheck.{Arbitrary, Gen}
 
 import scala.collection.immutable.Seq
 import scala.language.implicitConversions
@@ -34,7 +34,9 @@ object RandomGen {
         case GoBool => Gen.oneOf(true, false)
         case GoInt32 => Gen.choose(1000, 100000)
         case GoUInt64 => Gen.choose(0L, Long.MaxValue)
-        case GoFloat32 => Gen.double.map(_.toFloat)
+        case GoByte => Gen.choose(0, 255)
+        case GoChar => Arbitrary.arbitrary[Char]
+        case GoFloat32 => Arbitrary.arbitrary[Float]
         case GoArray(ele) =>
           tailcall(go(ele)).map(g => Gen.listOfN(3, g))
         case s@GoStruct(_) =>

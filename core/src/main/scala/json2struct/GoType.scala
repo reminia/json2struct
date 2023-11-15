@@ -2,7 +2,7 @@ package json2struct
 
 import json2struct.GoType.GoStruct
 import json2struct.Printer.upper
-import org.json4s.JsonAST._
+import org.json4s.JsonAST.*
 import org.json4s.{JArray, JBool}
 
 import scala.annotation.switch
@@ -20,6 +20,11 @@ sealed trait GoType {
 }
 
 object GoType {
+  // byte is unint8
+  case object GoByte extends GoType {
+    override def desc = "uint8"
+  }
+
   case object GoInt extends GoType {
     override def desc = "int"
   }
@@ -34,6 +39,11 @@ object GoType {
 
   case object GoFloat32 extends GoType {
     override def desc: String = "float32"
+  }
+
+  // GoChar is rune is int32
+  case object GoChar extends GoType {
+    override def desc: String = "rune"
   }
 
   case object GoString extends GoType {
@@ -65,6 +75,8 @@ object GoType {
       case "int" => GoInt
       case "int32" => GoInt32
       case "uint64" => GoUInt64
+      case "rune" => GoChar
+      case "byte" => GoByte
       case "float32" => GoFloat32
       case "string" => GoString
       case "bool" => GoBool

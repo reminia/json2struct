@@ -11,7 +11,11 @@ import scala.util.parsing.combinator.JavaTokenParsers
  */
 object GoStructParser extends JavaTokenParsers {
 
-  lazy val goType: Parser[GoType] = ("int" | "int32" | "uint64" | "bool" | "float32" | "string" | ident) ^^ GoType.from
+  lazy val goType: Parser[GoType] = (
+    "int" | "int32" | "uint64" | "float32"
+      | "rune" | "byte"
+      | "bool" | "string"
+      | ident) ^^ GoType.from
 
   def quote[T](inside: Parser[T]): Parser[T] = "\"" ~> inside <~ "\""
 
