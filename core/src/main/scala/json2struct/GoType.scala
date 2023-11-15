@@ -22,7 +22,7 @@ sealed trait GoType {
 object GoType {
   // byte is unint8
   case object GoByte extends GoType {
-    override def desc = "uint8"
+    override def desc = "byte"
   }
 
   case object GoInt extends GoType {
