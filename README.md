@@ -20,11 +20,10 @@ It's needed frequently to convert between http request/response body and struct 
 * cil, a simple cli tool that wraps the conversion logic, a zip is released for this module.
 * api, a simple rest api that serves the conversion, a zip and a docker image are released for direct usage.
 
-## Samples
+## json2struct
 
-### json to struct
-
-Json input:
+Json will be parsed to a sequence of struct types annotated with json tags.
+Below is the sample json and the generated struct types:
 
 ```json
 {
@@ -48,8 +47,6 @@ Json input:
 }
 ```
 
-Generated struct types:
-
 ```golang
 type OpenAiResponse struct {
     Id    string    `json:"id"`
@@ -72,15 +69,14 @@ type Usage struct {
 }
 ```
 
-### struct to json
+### struct2json
 
-All structs will be parsed to a sequence of Struct [AST](core/src/main/scala/json2struct/GoStructAST.scala).
-And then random data will be filled into the structs to produce fake json data.
-
-Struct input:
+Struct definitions will be parsed to a sequence of Struct [AST](core/src/main/scala/json2struct/GoStructAST.scala).
+Each AST can be converted to a map filled with random data.
+Below is the sample struct types and generated json data:
 
 ```golang
-`type OpenAiResponse struct {
+type OpenAiResponse struct {
 	Id      string   `json:"id"`
 	Object  string   `json:"object"`
 	Created uint64   `json:"created"`
@@ -103,10 +99,7 @@ type Message struct {
 	Role    string `json:"role"`
 	Content string `json:"content"`
 }
-
 ```
-
-Json generated:
 
 ```json
 {"model":"QC","choices":[{"index":482,"message":{"role":"cQUu2Gd","content":"NL"},"finish_reason":"Lckyp"},{"index":8,"message":{"role":"reH6","content":"o"},"finish_reason":"yMgu"},{"index":704,"message":{"role":"5X","content":"wXVmgIN"},"finish_reason":"mNl8"}],"usage":{"prompt_tokens":906,"completion_tokens":569,"total_tokens":930},"object":"5Y2li","id":"HSQ9","created":6840891044428693685}
