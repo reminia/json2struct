@@ -27,7 +27,7 @@ jobs:
 
       - name: Get version
         run: |
-          project_version=$( grep "projectVersion\s*=" build.sbt | awk -F'"' '{print $2}')
+          project_version=$(grep "projectVersion\s*=" build.sbt | awk -F'"' '{print $2}')
           echo "current project version: $project_version"
           echo "TAG=rel/$project_version" >> $GITHUB_ENV
         shell: bash
