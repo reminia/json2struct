@@ -34,6 +34,7 @@ jobs:
           project_version=$(sbt 'root/version' | tail -n 1  |  awk '{print $2}')
           echo "current project version: $project_version"
           echo "TAG=rel/$project_version" >> $GITHUB_ENV
+        shell: bash
 
       - name: Release cli zip
         uses: ncipollo/release-action@v1
