@@ -48,20 +48,28 @@ object RandomGen {
     def struct2map(tpe: GoStruct): TailRec[Gen[Map[String, Any]]] = {
       given.get(tpe.name).fold[TailRec[Gen[Map[String, Any]]]](done(Gen.const(null))) {
         struct =>
-          val seq = struct.fields.map { field =>
-            tailcall(go(field.tpe)).map(
-              _.map(v => jsonKey(field) -> v)
-            )
-          }
-          seq.foldRight[TailRec[Gen[Map[String, Any]]]](done(Gen.const(Map.empty))) {
-            (trTuple, trMap) =>
-              for {
-                genMap <- trMap
-                genTuple <- trTuple
-              } yield {
-                genMap.flatMap(map => genTuple.map(tuple => map + tuple))
+          struct.fields
+            .filter {
+              _.tag match {
+                case Tag.Simple(props)
+                  if props.getOrElse(JSON_TAG, Seq.empty).contains(JSON_IGNORE) => false
+                case _ => true
               }
-          }
+            }
+            .map { field =>
+              tailcall(go(field.tpe)).map(
+                _.map(v => jsonKey(field) -> v)
+              )
+            }
+            .foldRight[TailRec[Gen[Map[String, Any]]]](done(Gen.const(Map.empty))) {
+              (trTuple, trMap) =>
+                for {
+                  genMap <- trMap
+                  genTuple <- trTuple
+                } yield {
+                  genMap.flatMap(map => genTuple.map(tuple => map + tuple))
+                }
+            }
       }
     }
 
@@ -72,7 +80,7 @@ object RandomGen {
     val Field(name, _, tag) = f
     tag match {
       case Tag.Simple(props) =>
-        val values = props.get("json")
+        val values = props.get(JSON_TAG)
         values.fold(name) { seq =>
           val ret = seq.filter(x => !SPECIAL_JSON_PROPS.contains(x))
           ret.headOption.fold(name)(identity)

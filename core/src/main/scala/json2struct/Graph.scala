@@ -15,6 +15,7 @@ object Graph {
     val nodes = Set.newBuilder[String]
     val edges = Set.newBuilder[(String, String)]
     ss.foreach { s =>
+      nodes += s.name
       s.fields.foreach {
         case f: Field.Struct =>
           edges += (s.name -> f.name)

@@ -19,7 +19,9 @@ object GoStructParser extends JavaTokenParsers {
 
   def quote[T](inside: Parser[T]): Parser[T] = "\"" ~> inside <~ "\""
 
-  lazy val csv: Parser[Seq[String]] = (ident ~ ("," ~> ident).*) ^^ {
+  lazy val tagProp: Parser[String] = ident | "-"
+
+  lazy val csv: Parser[Seq[String]] = (tagProp ~ ("," ~> tagProp).*) ^^ {
     case name ~ seq => name :: seq
   }
 

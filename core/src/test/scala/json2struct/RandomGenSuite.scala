@@ -4,9 +4,10 @@ import json2struct.GoStructAST.{Field, Struct}
 import json2struct.GoType.{GoArray, GoInt, GoStruct}
 import org.scalacheck.Gen
 import org.scalatest.PrivateMethodTester
-import org.scalatest.matchers.should.Matchers._
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 
+import scala.collection.immutable.Seq
 import scala.collection.mutable
 
 class RandomGenSuite extends AnyWordSpec with PrivateMethodTester {
@@ -46,6 +47,25 @@ class RandomGenSuite extends AnyWordSpec with PrivateMethodTester {
         noException shouldBe thrownBy {
           RandomGen invokePrivate method(GoStruct("root"), map.toMap)
         }
+      }
+    }
+  }
+
+  "RandomGen" should {
+    "ignore struct field with json '-' tag" in {
+      val struct =
+        """
+          |type Person struct {
+          |	ID   int    `json:"id"`
+          |	Name string `json:"name"`
+          |	Age int `json:"-"`
+          |}
+          |""".stripMargin
+      val structs = RandomGen.genStructs(GoStructParser.parse(struct).get)
+      val anyMap = structs.head.asInstanceOf[Map[String, Any]]
+      anyMap.size shouldBe 2
+      Seq("age", "Age") foreach { ele =>
+        anyMap.keys should not contain ele
       }
     }
   }

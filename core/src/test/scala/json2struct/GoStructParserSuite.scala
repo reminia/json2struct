@@ -1,7 +1,7 @@
 package json2struct
 
 import json2struct.GoStructParser.{lineComment, multilineComment}
-import org.scalatest.matchers.should.Matchers._
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 
 class GoStructParserSuite extends AnyWordSpec {
