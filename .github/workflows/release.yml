@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   packages: write
 
 jobs:
@@ -25,20 +25,24 @@ jobs:
       - name: build zip
         run: sbt universal:packageBin
 
+      - name: get version
+        run: |
+          project_version=$(sbt 'root/version' | tail -n 1 | cut -d ' ' -f 2)
+          echo "current project version: $project_version"
+          echo "PROJECT_VERSION=$project_version" >> $GITHUB_ENV
+
       - name: release cli zip
         uses: ncipollo/release-action@v1
         with:
           artifacts: "cli/target/universal/cli*.zip"
-          name: ${{ vars.RELEASE_VERSION }}
-          tag: ${{ vars.RELEASE_VERSION }}
+          tag: "rel/" + ${{ env.PROJECT_VERSION }}
           allowUpdates: true
 
       - name: release api zip
         uses: ncipollo/release-action@v1
         with:
           artifacts: "api/target/universal/api*.zip"
-          name: ${{ vars.RELEASE_VERSION }}
-          tag: ${{ vars.RELEASE_VERSION }}
+          tag: "rel/" + ${{ env.PROJECT_VERSION }}
           allowUpdates: true
 
       - name: publish packages
