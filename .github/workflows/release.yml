@@ -27,8 +27,7 @@ jobs:
 
       - name: Get version
         run: |
-          sbt 'root/version' | tail -n 1 | cut -d ' ' -f 2 | xargs
-          project_version=$(sbt 'root/version' | tail -n 1 | cut -d ' ' -f 2 | xargs)
+          project_version=$(sbt 'root/version'  | tail -n 1  |  awk '{print $2}')
           echo "current project version: $project_version"
           echo "TAG=rel/$project_version" >> $GITHUB_ENV
 
