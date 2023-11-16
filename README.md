@@ -16,11 +16,9 @@ It's needed frequently to convert between http request/response body and struct 
 
 ## Modules
 
-There are 3 modules:
 * core, the core conversion logic.
 * cil, a simple cli tool that wraps the conversion logic, a zip is released for this module.
-* api, a simple rest api that serves the conversion.
- I have released both a zip and a docker image for ease usage.
+* api, a simple rest api that serves the conversion, a zip and a docker image are released for direct usage.
 
 ## Samples
 
