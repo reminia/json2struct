@@ -22,6 +22,7 @@ lazy val root = project
   .in(file("."))
   .settings(moduleName := "root")
   .settings(noPublish *)
+  .settings(commonSettings)
   .aggregate(core, cli, api)
 
 lazy val core = project
