@@ -27,6 +27,8 @@ jobs:
 
       - name: Get version
         run: |
+          sbt 'root/version'
+          sbt 'root/version' |& tail -n 1
           sbt 'root/version' | tail -n 1
           sbt 'root/version' | tail -n 1|  awk '{print $2}'
           project_version=$(sbt 'root/version' | tail -n 1  |  awk '{print $2}')
