@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout code
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up JDK 11
@@ -22,30 +22,30 @@ jobs:
           distribution: 'temurin'
           cache: 'sbt'
 
-      - name: build zip
+      - name: Build zip
         run: sbt universal:packageBin
 
-      - name: get version
+      - name: Get version
         run: |
-          project_version=$(sbt 'root/version' | tail -n 1 | cut -d ' ' -f 2)
+          project_version=$(sbt 'root/version' | tail -n 1 | cut -d ' ' -f 2 | xargs)
           echo "current project version: $project_version"
           echo "TAG=rel/$project_version" >> $GITHUB_ENV
 
-      - name: release cli zip
+      - name: Release cli zip
         uses: ncipollo/release-action@v1
         with:
           artifacts: "cli/target/universal/cli*.zip"
           tag: ${{ env.TAG }}
           allowUpdates: true
 
-      - name: release api zip
+      - name: Release api zip
         uses: ncipollo/release-action@v1
         with:
           artifacts: "api/target/universal/api*.zip"
           tag: ${{ env.TAG }}
           allowUpdates: true
 
-      - name: publish packages
+      - name: Publish packages
         run: sbt publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
