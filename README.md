@@ -69,7 +69,7 @@ type Usage struct {
 }
 ```
 
-### struct2json
+## struct2json
 
 Struct definitions will be parsed to a sequence of Struct [AST](core/src/main/scala/json2struct/GoStructAST.scala).
 Each AST can be converted to a map filled with random data.
