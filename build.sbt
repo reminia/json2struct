@@ -2,10 +2,10 @@ import Build.*
 
 name := "json2struct"
 
-val projectVersion = "0.3.0-SNAPSHOT"
+val projectVersion = "0.3.0"
 val scala2version = "2.13.12"
 val javaVersion = "11"
-val apiDockerVersion = "0.1"
+val apiDockerVersion = "0.2"
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
