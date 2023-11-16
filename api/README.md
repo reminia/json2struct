@@ -1,6 +1,6 @@
 # api
 
-A simple rest api that servers the conversion between json data and struct type.
+A simple rest [api](src/main/scala/json2struct/api/Server.scala) that servers the conversion between json data and struct type.
 
 3 endpoints:
 

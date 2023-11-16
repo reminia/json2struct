@@ -12,7 +12,7 @@ It's needed frequently to convert between http request/response body and struct 
 * `sbt compile test`, compile and test it.
 * `sbt universal:packageBin`, package the zip which lies in target/universal folder.
 * unzip the [zip](https://github.com/reminia/json2struct/releases) package,
- run it by `bin/json2struct` script.
+  run it by `bin/json2struct` script.
 
 ## Modules
 
@@ -74,13 +74,13 @@ type Usage struct {
 
 ### struct to json
 
-All structs will be parsed to a sequence of [Struct AST](src/main/scala/json2struct/GoStructAST.scala).
+All structs will be parsed to a sequence of Struct [AST](core/src/main/scala/json2struct/GoStructAST.scala).
 And then random data will be filled into the structs to produce fake json data.
 
 Struct input:
 
 ```golang
-type OpenAiResponse struct {
+`type OpenAiResponse struct {
 	Id      string   `json:"id"`
 	Object  string   `json:"object"`
 	Created uint64   `json:"created"`

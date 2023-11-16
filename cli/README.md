@@ -1,6 +1,6 @@
 # cli
 
-It's a simple [cli](cli/src/main/scala/json2struct/cli/Cli.scala) tool.
+It's a simple [cli](src/main/scala/json2struct/cli/Cli.scala) tool.
 After packaging, you can use it as:
 
 * `bin/json2struct --help`, show help message.
