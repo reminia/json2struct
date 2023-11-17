@@ -20,5 +20,7 @@ jobs:
         run: |
           a=$(sbt 'root/version' | tail -n 1 | cut -d ' ' -f 2  | xargs)
           echo $a
+          ls | tail -n 1
+          echo "hello world"
         env:
           ACTIONS_STEP_DEBUG: true
