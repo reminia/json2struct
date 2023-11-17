@@ -12,7 +12,7 @@ It's needed frequently to convert between http request/response body and struct 
 * `sbt compile test`, compile and test it.
 * `sbt universal:packageBin`, package the zip which lies in target/universal folder.
 * unzip the [zip](https://github.com/reminia/json2struct/releases) package,
-  run it by `bin/json2struct` script.
+  run it by `bin/cli` or `bin/api` script.
 
 ## Modules
 
