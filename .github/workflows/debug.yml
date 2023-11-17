@@ -24,6 +24,8 @@ jobs:
           sbt 'show version' | tail
           sbt 'show version' | head 
           sbt 'show version' | head -n 1
+          echo "xxx"
+          sbt 'show version' | tail - n 1
           echo "hello world"
         env:
           ACTIONS_STEP_DEBUG: true
