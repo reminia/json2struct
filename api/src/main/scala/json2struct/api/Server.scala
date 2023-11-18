@@ -46,5 +46,6 @@ object Server extends Directives with JsonSupport {
     )
 
     Http().newServerAt("0.0.0.0", HttpPort).bind(route)
+    println(s"Server started on 0.0.0.0:$HttpPort")
   }
 }
