@@ -25,7 +25,9 @@ jobs:
           sbt 'show version' | head 
           sbt 'show version' | head -n 1
           echo "xxx"
-          sbt 'show version' | tail -n 2
+          sbt 'show version' | tail -n 1
+          echo "no colors"
+          sbt -no-colors 'show version' | tail -n 1
           echo "hello world"
         env:
           ACTIONS_STEP_DEBUG: true
