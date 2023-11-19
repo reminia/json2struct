@@ -26,7 +26,7 @@ object Printer {
   def newline: String = System.lineSeparator()
 
   // uppercase first char
-  def upper(s: String): String = s.toCharArray.toList match {
+  def upperFst(s: String): String = s.toList match {
     case fst :: tail if fst.isLower =>
       (fst.toUpper :: tail).mkString
     case _ => s
@@ -34,7 +34,22 @@ object Printer {
 
   // snake case to upper camel case
   def upperCamelCase(name: String): String = {
-    name.split("_").map(upper).mkString("")
+    name.split("_").map(upperFst).mkString("")
+  }
+
+  def snakeCase(name: String): String = {
+    name.foldLeft((new StringBuilder(), false)) {
+      case ((sb, isUpper), ch) =>
+        if (sb.isEmpty && ch.isUpper) {
+          sb.append(ch.toLower) -> true
+        } else if (isUpper && ch.isUpper) {
+          sb.append(ch.toLower) -> true
+        } else if (ch.isUpper) {
+          sb.append("_").append(ch.toLower) -> true
+        } else {
+          sb.append(ch) -> false
+        }
+    }._1.toString()
   }
 
   object Syntax {
