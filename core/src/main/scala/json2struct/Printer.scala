@@ -23,7 +23,7 @@ object Printer {
 
   def indent(num: Int = 4): String = space(num)
 
-  def newline = "\n"
+  def newline: String = System.lineSeparator()
 
   // uppercase first char
   def upper(s: String): String = s.toCharArray.toList match {
