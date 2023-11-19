@@ -59,7 +59,7 @@ type OpenAiResponse struct {
 type Choices struct {
     Text  string  `json:"text"`
     Index  int  `json:"index"`
-    Logprobs  *Unknown*  `json:"logprobs"`
+    Logprobs  any  `json:"logprobs"`
     FinishReason  string  `json:"finish_reason"`
 }
 type Usage struct {

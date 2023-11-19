@@ -41,7 +41,7 @@ object RandomGen {
           tailcall(go(ele)).map(g => Gen.listOfN(3, g))
         case s@GoStruct(_) =>
           struct2map(s).asInstanceOf[TailRec[Gen[Any]]]
-        case Unknown => Gen.const(null)
+        case GoAny => Gen.const(null)
       }
     }
 

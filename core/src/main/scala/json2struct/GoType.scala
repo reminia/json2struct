@@ -1,7 +1,7 @@
 package json2struct
 
 import json2struct.GoType.GoStruct
-import json2struct.Printer.upper
+import json2struct.Printer.upperCamelCase
 import org.json4s.JsonAST.*
 import org.json4s.{JArray, JBool}
 
@@ -61,13 +61,13 @@ object GoType {
   case class GoStruct(name: String) extends GoType {
     override def desc: String = {
       if (name.isEmpty)
-        UNKNOWN
-      else upper(name)
+        ANY
+      else upperCamelCase(name)
     }
   }
 
-  case object Unknown extends GoType {
-    override def desc: String = UNKNOWN
+  case object GoAny extends GoType {
+    override def desc: String = ANY
   }
 
   def from(tpe: String): GoType = {
@@ -80,7 +80,8 @@ object GoType {
       case "float32" => GoFloat32
       case "string" => GoString
       case "bool" => GoBool
-      // todo: not all go types supported for now
+      case "any" => GoAny
+      // unknown types default to struct type
       case sth => GoStruct(sth)
     }
   }
@@ -93,10 +94,10 @@ object GoType {
       case JString(_) => GoString
       case JBool(_) => GoBool
       case JArray(arr) =>
-        if (arr.isEmpty) GoArray(Unknown)
+        if (arr.isEmpty) GoArray(GoAny)
         else GoArray(GoType(name, arr.head))
       case JObject(_) => GoStruct(name)
-      case _ => Unknown
+      case _ => GoAny
     }
   }
 

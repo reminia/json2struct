@@ -26,12 +26,15 @@ object Printer {
   def newline = "\n"
 
   // uppercase first char
-  def upper(s: String): String = {
-    s.toCharArray.toList match {
-      case fst :: tail if fst.isLower =>
-        (fst.toUpper :: tail).mkString
-      case _ => s
-    }
+  def upper(s: String): String = s.toCharArray.toList match {
+    case fst :: tail if fst.isLower =>
+      (fst.toUpper :: tail).mkString
+    case _ => s
+  }
+
+  // snake case to upper camel case
+  def upperCamelCase(name: String): String = {
+    name.split("_").map(upper).mkString("")
   }
 
   object Syntax {

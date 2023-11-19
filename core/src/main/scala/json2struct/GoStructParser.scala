@@ -15,6 +15,7 @@ object GoStructParser extends JavaTokenParsers {
     "int" | "int32" | "uint64" | "float32"
       | "rune" | "byte"
       | "bool" | "string"
+      | "any"
       | ident) ^^ GoType.from
 
   def quote[T](inside: Parser[T]): Parser[T] = "\"" ~> inside <~ "\""
