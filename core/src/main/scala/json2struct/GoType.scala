@@ -13,7 +13,7 @@ sealed trait GoType {
   override def toString: String = desc
 
   def isStruct: Boolean = this match {
-    case GoStruct(_) => true
+    case _: GoStruct => true
     case _ => false
   }
 

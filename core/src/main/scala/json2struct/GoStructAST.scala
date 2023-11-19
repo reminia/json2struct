@@ -12,7 +12,7 @@ object GoStructAST {
     def tag: Tag
 
     def isArray: Boolean = tpe match {
-      case GoArray(_) => true
+      case _: GoArray => true
       case _ => false
     }
 
