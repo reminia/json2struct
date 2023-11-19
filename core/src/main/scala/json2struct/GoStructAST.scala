@@ -17,7 +17,7 @@ object GoStructAST {
     }
 
     def isStruct: Boolean = this match {
-      case Field.Struct(_, _) => true
+      case _: Struct => true
       case _ => false
     }
   }
@@ -28,10 +28,6 @@ object GoStructAST {
 
     case class Simple(name: String, tpe: GoType, tag: Tag = Tag.None)
       extends Field
-
-    case class Struct(name: String, tag: Tag = Tag.None) extends Field {
-      override def tpe: GoType = GoType.GoStruct(name)
-    }
   }
 
 
@@ -43,6 +39,11 @@ object GoStructAST {
     case object None extends Tag
   }
 
-  case class Struct(name: String, fields: Seq[Field])
+  case class Struct(name: String, fields: Seq[Field], tag: Tag = Tag.None) extends Field {
+    def this(name: String) = {
+      this(name, Seq.empty)
+    }
 
+    override def tpe: GoType = GoType.GoStruct(name)
+  }
 }

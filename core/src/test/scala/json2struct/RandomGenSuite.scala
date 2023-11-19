@@ -1,6 +1,6 @@
 package json2struct
 
-import json2struct.GoStructAST.{Field, Struct}
+import json2struct.GoStructAST.Struct
 import json2struct.GoType.{GoArray, GoInt, GoStruct}
 import org.scalacheck.Gen
 import org.scalatest.PrivateMethodTester
@@ -38,7 +38,7 @@ class RandomGenSuite extends AnyWordSpec with PrivateMethodTester {
             while (map.contains(name)) {
               name = gen.sample.get
             }
-            val _struct = struct.copy(fields = Seq(Field.Struct(name)))
+            val _struct = struct.copy(fields = Seq(new Struct(name)))
             map += _struct.name -> _struct
             val res = Struct(name, Seq.empty)
             map += name -> res

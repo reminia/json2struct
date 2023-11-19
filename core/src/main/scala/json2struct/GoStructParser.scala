@@ -49,7 +49,7 @@ object GoStructParser extends JavaTokenParsers {
 
   lazy val field: Parser[Field] = (ident ~ goType ~ tag.?) ^^ {
     case name ~ tpe ~ t if tpe.isStruct =>
-      Field.Struct(name, t.fold[Tag](Tag.None)(identity))
+      Struct(name, Seq(), t.fold[Tag](Tag.None)(identity))
     case name ~ tpe ~ t =>
       Field.Simple(name, tpe, t.fold[Tag](Tag.None)(identity))
   } | array

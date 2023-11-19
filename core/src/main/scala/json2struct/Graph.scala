@@ -17,7 +17,7 @@ object Graph {
     ss.foreach { s =>
       nodes += s.name
       s.fields.foreach {
-        case f: Field.Struct =>
+        case f: Struct =>
           edges += (s.name -> f.name)
           nodes += s.name += f.name
         case Field.Simple(_, GoArray(tpe), _) if tpe.isStruct =>
