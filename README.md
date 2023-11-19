@@ -49,23 +49,23 @@ Below is the sample json and the generated struct types:
 
 ```golang
 type OpenAiResponse struct {
-    Id    string    `json:"id"`
-    Object    string    `json:"object"`
-    Created    int    `json:"created"`
-    Model    string    `json:"model"`
-    Choices    []Choices    `json:"choices"`
-    Usage    Usage    `json:"usage"`
+    Id  string  `json:"id"`
+    Object  string  `json:"object"`
+    Created  int  `json:"created"`
+    Model  string  `json:"model"`
+    Choices  []Choices  `json:"choices"`
+    Usage  Usage  `json:"usage"`
 }
 type Choices struct {
-    Text    string    `json:"text"`
-    Index    int    `json:"index"`
-    Logprobs    *Unknown*    `json:"logprobs"`
-    Finish_reason    string    `json:"finish_reason"`
+    Text  string  `json:"text"`
+    Index  int  `json:"index"`
+    Logprobs  *Unknown*  `json:"logprobs"`
+    FinishReason  string  `json:"finish_reason"`
 }
 type Usage struct {
-    Prompt_tokens    int    `json:"prompt_tokens"`
-    Completion_tokens    int    `json:"completion_tokens"`
-    Total_tokens    int    `json:"total_tokens"`
+    PromptTokens  int  `json:"prompt_tokens"`
+    CompletionTokens  int  `json:"completion_tokens"`
+    TotalTokens  int  `json:"total_tokens"`
 }
 ```
 

@@ -2,15 +2,15 @@ package json2struct
 
 import json2struct.GoStructAST.{Field, Struct, Tag}
 import json2struct.Printer.upper
+import org.json4s.*
 import org.json4s.JsonAST.{JArray, JField, JObject}
-import org.json4s._
 import org.json4s.native.JsonMethods
 
 import scala.collection.mutable
 
 object Converter {
 
-  def convertJson(json: String, name: String): Seq[Struct] = {
+  def convertJson(json: String, name: String = "Root"): Seq[Struct] = {
     convert(JsonMethods.parse(json), name)
   }
 
@@ -48,8 +48,12 @@ object Converter {
 
   private def parseJsonField(field: JField): Field.Simple = {
     val (name, value) = field
-    val _name = upper(name)
+    val _name = upperCamelCase(name)
     val tag = Tag.Simple(Map("json" -> Seq(name)))
     Field.Simple(_name, GoType.apply(_name, value), tag)
+  }
+
+  def upperCamelCase(name: String): String = {
+    name.split("_").map(upper).mkString("")
   }
 }
