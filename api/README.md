@@ -12,5 +12,5 @@ A simple rest [api](src/main/scala/json2struct/api/Server.scala) that servers th
 ## Docker
 Docker image is built using the sbt-native-packager/docker plugin.
 * Run `sbt docker:publishLocal` to build the image.
-* Start the container by `docker run -d  -p 8081:8080 ghcr.io/reminia/json2struct-api:0.1`.
-* Or use the one I have published to gcr by `docker pull ghcr.io/reminia/json2struct-api:0.1`.
+* Start the container by `docker run -d  -p 8081:8080 ghcr.io/reminia/json2struct-api:0.2`.
+* Or use the one I have published to gcr by `docker pull ghcr.io/reminia/json2struct-api:0.2`.
