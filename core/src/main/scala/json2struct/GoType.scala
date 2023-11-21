@@ -1,7 +1,7 @@
 package json2struct
 
 import json2struct.GoType.GoStruct
-import json2struct.Printer.upperCamelCase
+import json2struct.Printer.Syntax.toStringOps
 import org.json4s.JsonAST.*
 import org.json4s.{JArray, JBool}
 
@@ -62,7 +62,7 @@ object GoType {
     override def desc: String = {
       if (name.isEmpty)
         ANY
-      else upperCamelCase(name)
+      else name.upperCamelCase
     }
   }
 

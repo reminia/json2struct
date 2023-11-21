@@ -25,34 +25,39 @@ object Printer {
 
   def newline: String = System.lineSeparator()
 
-  // uppercase first char
-  def upperFst(s: String): String = s.toList match {
-    case fst :: tail if fst.isLower =>
-      (fst.toUpper :: tail).mkString
-    case _ => s
-  }
-
-  // snake case to upper camel case
-  def upperCamelCase(name: String): String = {
-    name.split("_").map(upperFst).mkString("")
-  }
-
-  def snakeCase(name: String): String = {
-    name.foldLeft((new StringBuilder(), false)) {
-      case ((sb, isUpper), ch) =>
-        if (sb.isEmpty && ch.isUpper) {
-          sb.append(ch.toLower) -> true
-        } else if (isUpper && ch.isUpper) {
-          sb.append(ch.toLower) -> true
-        } else if (ch.isUpper) {
-          sb.append("_").append(ch.toLower) -> true
-        } else {
-          sb.append(ch) -> false
-        }
-    }._1.toString()
-  }
-
   object Syntax {
+
+    class StringOps(s: String) {
+      def snakeCase: String = {
+        s.foldLeft((new StringBuilder(), false)) {
+          case ((sb, isUpper), ch) =>
+            if (sb.isEmpty && ch.isUpper) {
+              sb.append(ch.toLower) -> true
+            } else if (isUpper && ch.isUpper) {
+              sb.append(ch.toLower) -> true
+            } else if (ch.isUpper) {
+              sb.append("_").append(ch.toLower) -> true
+            } else {
+              sb.append(ch) -> false
+            }
+        }._1.toString()
+      }
+
+      // uppercase first char
+      def upperFst: String = s.toList match {
+        case fst :: tail if fst.isLower =>
+          (fst.toUpper :: tail).mkString
+        case _ => s
+      }
+
+      // snake case to upper camel case
+      def upperCamelCase: String = {
+        s.split("_").map(_.upperFst).mkString("")
+      }
+    }
+
+    implicit def toStringOps(s: String): StringOps = new StringOps(s)
+
     trait PrinterOps {
       def print(): String
     }
@@ -60,7 +65,6 @@ object Printer {
     implicit def toPrinterOps[T: Printer](t: T): PrinterOps =
       () => implicitly[Printer[T]].print(t)
   }
-
 
   implicit object TagPrinter extends Printer[Tag] {
     override def print(tag: Tag): String = tag match {
