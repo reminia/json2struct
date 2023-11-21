@@ -1,7 +1,7 @@
 package json2struct
 
 import json2struct.Printer.Syntax.toPrinterOps
-import org.scalatest.matchers.should.Matchers._
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 
 class ConverterSuite extends AnyWordSpec {
@@ -37,7 +37,7 @@ class ConverterSuite extends AnyWordSpec {
       }
     }
 
-    "convert struct type to map(json object)" in {
+    "convert multiple struct types to map(json object)" in {
       val seq: Seq[Any] = Converter.convertStruct(
         """
           |type OpenAiResponse struct {
@@ -80,6 +80,22 @@ class ConverterSuite extends AnyWordSpec {
       val choices: Seq[Map[String, Any]] = map("choices").asInstanceOf[Seq[Map[String, Any]]]
       choices.head.keys should contain theSameElementsAs Seq("index", "message", "finish_reason")
 
+      noException shouldBe thrownBy {
+        seq.foreach { m => println(m.print()) }
+      }
+    }
+
+    "convert single struct type to json" in {
+      val struct =
+        """
+          | type Data struct {
+          |  Value int
+          |  Type string
+          | }
+          |""".stripMargin
+      val seq = Converter.convertStruct(struct)
+      val map = seq.head.asInstanceOf[Map[String, Any]]
+      map.keys should contain theSameElementsAs Seq("value", "type")
       noException shouldBe thrownBy {
         seq.foreach { m => println(m.print()) }
       }

@@ -25,6 +25,11 @@ class PrinterSuite extends AnyWordSpec {
         "hello".upperFst shouldBe "Hello"
         "Hello".upperFst shouldBe "Hello"
       }
+
+      "lower string fst letter" in {
+        "Hello".lowerFst shouldBe "hello"
+        "hello".lowerFst shouldBe "hello"
+      }
     }
   }
 

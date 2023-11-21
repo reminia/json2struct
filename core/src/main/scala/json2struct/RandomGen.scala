@@ -2,6 +2,7 @@ package json2struct
 
 import json2struct.GoStructAST.{Field, Struct, Tag}
 import json2struct.GoType.*
+import json2struct.Printer.Syntax.toStringOps
 import org.scalacheck.{Arbitrary, Gen}
 
 import scala.collection.immutable.Seq
@@ -85,7 +86,7 @@ object RandomGen {
           val ret = seq.filter(x => !SPECIAL_JSON_PROPS.contains(x))
           ret.headOption.fold(name)(identity)
         }
-      case _ => name
+      case _ => name.lowerFst
     }
   }
 

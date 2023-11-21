@@ -20,3 +20,4 @@
 * unknown type to any type
 * convert snake case name to upper camel case
 * remove redundant Field.Struct type
+* struct to json should lower the first letter of json key

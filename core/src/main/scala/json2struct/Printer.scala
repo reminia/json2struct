@@ -50,6 +50,13 @@ object Printer {
         case _ => s
       }
 
+      // lowercase first char
+      def lowerFst: String = s.toList match {
+        case fst :: tail if fst.isUpper =>
+          (fst.toLower :: tail).mkString
+        case _ => s
+      }
+
       // snake case to upper camel case
       def upperCamelCase: String = {
         s.split("_").map(_.upperFst).mkString("")
