@@ -39,7 +39,7 @@ object RandomGen {
         case GoFloat32 => Arbitrary.arbitrary[Float]
         case GoArray(ele) =>
           tailcall(go(ele)).map(g => Gen.listOfN(3, g))
-        case s@GoStruct(_) =>
+        case s: GoStruct =>
           struct2map(s).asInstanceOf[TailRec[Gen[Any]]]
         case GoAny => Gen.const(null)
       }
