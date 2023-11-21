@@ -20,6 +20,11 @@ class PrinterSuite extends AnyWordSpec {
         "hello".snakeCase shouldBe "hello"
         "Hello".snakeCase shouldBe "hello"
       }
+
+      "upper string fst letter" in {
+        "hello".upperFst shouldBe "Hello"
+        "Hello".upperFst shouldBe "Hello"
+      }
     }
   }
 
