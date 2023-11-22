@@ -36,6 +36,7 @@ lazy val core = project
       "org.json4s" %% "json4s-native" % "4.0.6",
       "org.scala-lang.modules" %% "scala-parser-combinators" % "2.3.0",
       "org.scalacheck" %% "scalacheck" % "1.15.4",
+      typesafeConfig,
       "org.scalatest" %% "scalatest" % "3.2.15" % "test"
     ))
 
@@ -66,7 +67,7 @@ lazy val api = project
       "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
       "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion,
       "com.typesafe.akka" %% "akka-stream" % "2.9.0",
-      "com.typesafe" % "config" % "1.4.3"
+      typesafeConfig
     ))
   .settings(
     mainClass := Some("json2struct.api.Server"),

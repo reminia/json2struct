@@ -86,7 +86,12 @@ object RandomGen {
           val ret = seq.filter(x => !SPECIAL_JSON_PROPS.contains(x))
           ret.headOption.fold(name)(identity)
         }
-      case _ => name.lowerFst
+      case _ =>
+        if (Conf.snakeCaseEnabled) {
+          name.snakeCase
+        } else {
+          name.lowerFst
+        }
     }
   }
 

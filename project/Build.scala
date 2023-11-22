@@ -34,6 +34,7 @@ object Build {
   val commonDockerSettings = Seq(
     Docker / dockerRepository := Some("ghcr.io/reminia")
   )
+  val typesafeConfig = "com.typesafe" % "config" % "1.4.3"
 
   def dockerfile(file: String): Seq[Cmd] = {
     Using.resource(Source.fromFile(file)) { src =>
