@@ -4,9 +4,10 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives
+import json2struct.Conf.APP_CONF
 import json2struct.Converter
 import json2struct.Printer.Syntax.toPrinterOps
-import json2struct.api.Conf.{APP_CONF, HttpPort}
+import json2struct.api.Conf.HttpPort
 import json2struct.api.JsonSupport.Json
 
 object Server extends Directives with JsonSupport {
@@ -27,15 +28,15 @@ object Server extends Directives with JsonSupport {
             }
           }
         } ~
-        path("struct") {
-          post {
-            entity(as[String]) { struct =>
-              complete {
-                Converter.convertStruct(struct).map(_.print()).mkString(System.lineSeparator())
+          path("struct") {
+            post {
+              entity(as[String]) { struct =>
+                complete {
+                  Converter.convertStruct(struct).map(_.print()).mkString(System.lineSeparator())
+                }
               }
             }
           }
-        }
       },
 
       path("health") {
