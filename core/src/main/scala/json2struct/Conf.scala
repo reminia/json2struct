@@ -16,5 +16,5 @@ object Conf {
       .withFallback(ConfigFactory.load())
   }
 
-  def snakeCaseEnabled: Boolean = APP_CONF.getBoolean("json2struct.snake-case")
+  def snakeCaseEnabled: Boolean = APP_CONF.getBoolean("struct2json.snake-case")
 }
