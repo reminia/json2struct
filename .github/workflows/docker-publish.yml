@@ -31,11 +31,9 @@ jobs:
 
       - name: publish api docker image
         run: |
-          echo "release latest image ${{ inputs.latest }}"
+          echo "Release latest image ${{ inputs.latest }}"
           if [[ "${{ inputs.latest }}" != "false" ]]; then
-            echo "latest"
-            # sbt -Ddocker.image.version=latest "project api" docker:publish
+             sbt -Ddocker.image.version=latest "project api" docker:publish
           else
-            echo "non latest"
-            # sbt "project api" docker:publish
+             sbt "project api" docker:publish
           fi
