@@ -23,3 +23,4 @@
 * struct to json should lower the first letter of json key
 * add snake-case conf to support converting to snake-case style json props
 * add a new json2struct endpoint with name as query parameter and json as body
+* support to release latest docker image based on newest code in github ci
