@@ -33,7 +33,7 @@ jobs:
         run: |
           echo "Release latest image ${{ inputs.latest }}"
           if [[ "${{ inputs.latest }}" != "false" ]]; then
-             sbt "set api.Docker.version := \"latest\"" "project api" "docker:publishLocal"
+            sbt "set api / Docker / version := \"latest\"" "project api" "docker:publish"
           else
-             sbt "project api" docker:publish
+            sbt "project api" docker:publish
           fi
