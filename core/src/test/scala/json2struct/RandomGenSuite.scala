@@ -1,5 +1,7 @@
 package json2struct
 
+import com.typesafe.config.ConfigFactory
+import json2struct.Conf.APP_CONF
 import json2struct.GoStructAST.Struct
 import json2struct.GoType.{GoArray, GoInt, GoStruct}
 import org.scalacheck.Gen
@@ -9,6 +11,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import scala.collection.immutable.Seq
 import scala.collection.mutable
+import scala.jdk.CollectionConverters.*
 
 class RandomGenSuite extends AnyWordSpec with PrivateMethodTester {
 
@@ -22,7 +25,7 @@ class RandomGenSuite extends AnyWordSpec with PrivateMethodTester {
           (acc, _) => GoArray(acc)
         }
         noException shouldBe thrownBy {
-          RandomGen invokePrivate method(deepArray, Map.empty)
+          new RandomGen(APP_CONF) invokePrivate method(deepArray, Map.empty)
         }
       }
     }
@@ -45,28 +48,40 @@ class RandomGenSuite extends AnyWordSpec with PrivateMethodTester {
             res
         }
         noException shouldBe thrownBy {
-          RandomGen invokePrivate method(GoStruct("root"), map.toMap)
+          new RandomGen(APP_CONF) invokePrivate method(GoStruct("root"), map.toMap)
         }
       }
     }
   }
 
   "RandomGen" should {
+    val struct =
+      """
+        |type Person struct {
+        |	ID   int    `json:"id"`
+        |	Name string `json:"name"`
+        |	Age int `json:"-"`
+        | FavoriteMovie String
+        | }
+        |""".stripMargin
+
     "ignore struct field with json '-' tag" in {
-      val struct =
-        """
-          |type Person struct {
-          |	ID   int    `json:"id"`
-          |	Name string `json:"name"`
-          |	Age int `json:"-"`
-          |}
-          |""".stripMargin
-      val structs = RandomGen.genStructs(GoStructParser.parse(struct).get)
+      val structs = new RandomGen(APP_CONF)
+        .genStructs(GoStructParser.parse(struct).get)
       val anyMap = structs.head.asInstanceOf[Map[String, Any]]
-      anyMap.size shouldBe 2
+      anyMap.size shouldBe 3
       Seq("age", "Age") foreach { ele =>
         anyMap.keys should not contain ele
       }
     }
+
+    "produce snake case json prop if snake-case enabled" in {
+      val conf = ConfigFactory.parseMap(Map("struct2json.snake-case" -> true).asJava)
+      val structs = new RandomGen(conf)
+        .genStructs(GoStructParser.parse(struct).get)
+      val anyMap = structs.head.asInstanceOf[Map[String, Any]]
+      anyMap.keys should contain("favorite_movie")
+    }
   }
+
 }

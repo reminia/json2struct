@@ -1,5 +1,7 @@
 package json2struct
 
+import com.typesafe.config.Config
+import json2struct.Conf.APP_CONF
 import json2struct.GoStructAST.{Field, Struct, Tag}
 import json2struct.Printer.Syntax.toStringOps
 import org.json4s.*
@@ -14,11 +16,11 @@ object Converter {
     convert(JsonMethods.parse(json), name)
   }
 
-  def convertStruct(struct: String): Seq[Any] = {
+  def convertStruct(struct: String, conf: Config = APP_CONF): Seq[Any] = {
     GoStructParser
       .parse(struct)
       .fold[Seq[Any]](Seq.empty) {
-        ss => RandomGen.genStructs(ss)
+        ss => new RandomGen(conf).genStructs(ss)
       }
   }
 

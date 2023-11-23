@@ -1,5 +1,7 @@
 package json2struct
 
+import com.typesafe.config.Config
+import json2struct.Conf.AppConf
 import json2struct.GoStructAST.{Field, Struct, Tag}
 import json2struct.GoType.*
 import json2struct.Printer.Syntax.toStringOps
@@ -10,7 +12,7 @@ import scala.language.implicitConversions
 import scala.util.control.TailCalls
 import scala.util.control.TailCalls.{TailRec, done, tailcall}
 
-object RandomGen {
+class RandomGen(conf: Config) {
 
   // Seq[Any] is actually Seq[Map[String, Any]]
   def genStructs(ss: Seq[Struct]): Seq[Any] = {
@@ -87,7 +89,7 @@ object RandomGen {
           ret.headOption.fold(name)(identity)
         }
       case _ =>
-        if (Conf.snakeCaseEnabled) {
+        if (conf.snakeCaseEnabled) {
           name.snakeCase
         } else {
           name.lowerFst

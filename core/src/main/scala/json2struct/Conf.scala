@@ -3,6 +3,7 @@ package json2struct
 import com.typesafe.config.{Config, ConfigFactory}
 
 import java.nio.file.Paths
+import scala.language.implicitConversions
 
 object Conf {
   val HOME = sys.env.getOrElse("JSON2STRUCT_HOME", "/opt/json2struct")
@@ -16,5 +17,7 @@ object Conf {
       .withFallback(ConfigFactory.load())
   }
 
-  def snakeCaseEnabled: Boolean = APP_CONF.getBoolean("struct2json.snake-case")
+  implicit class AppConf(conf: Config) {
+    def snakeCaseEnabled: Boolean = conf.getBoolean("struct2json.snake-case")
+  }
 }
