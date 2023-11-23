@@ -1,9 +1,20 @@
 # cli
 
 It's a simple [cli](src/main/scala/json2struct/cli/Cli.scala) tool.
-After packaging, you can use it as:
+After packaging, you can use it with:
 
 * `bin/cli --help`, show help message.
-* `bin/cli "struct content"`. It converts struct to random json data.
-* `bin/cli -j name "json content"`. It converts json to struct types,
+* `bin/cli "struct content"`, convert struct to random json data.
+* `bin/cli -j name "json content"`, convert json to struct types,
  name is the top struct type name.
+
+ Try it with:
+
+ ```bash
+  bin/cli -j Root '{"usage": {"prompt_tokens": 5, "completion_tokens": 7, "total_tokens": 12}}'
+
+  bin/cli ' type Data struct {
+   Value int
+   Type string
+  }'
+ ```
