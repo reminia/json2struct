@@ -38,6 +38,21 @@ object Server extends Directives with JsonSupport {
             }
           }
       },
+      pathPrefix("v2" / "convert") {
+        path("json") {
+          post {
+            parameters("name") { name =>
+              entity(as[String]) { json =>
+                complete {
+                  Converter.convertJson(json, name)
+                    .map(_.print())
+                    .mkString(System.lineSeparator())
+                }
+              }
+            }
+          }
+        }
+      },
 
       path("health") {
         get {

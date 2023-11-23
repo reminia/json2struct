@@ -8,6 +8,32 @@ A simple rest [api](src/main/scala/json2struct/api/Server.scala) that servers th
  like {"name": "RootType", "json":"xxxx"}.
 2. `POST /v1/convert/struct`, convert struct to json. The request body is plain text of struct types you want to convert.
 3. `GET /health`, query server healthy status.
+4. `POST /v2/convert/json?name=xxx`, convert json to struct. Query name is the root struct type name,
+request body is plain json data. It's easy to use than the v1 one.
+
+Try it with below curl commands:
+
+```bash
+curl http://localhost:8080/health
+
+curl -X POST -d 'type Data struct {
+ Type string
+ Value int
+}' http://localhost:8081/v1/convert/struct
+
+curl -X POST -H "Content-Type: application/json"  -d '{
+  "name": "Root",
+  "json": "{\"usage\":{\"prompt_tokens\":5,\"completion_tokens\":7,\"total_tokens\":12}}"}' \
+  http://localhost:8080/v1/convert/json
+
+curl -X POST -d '{
+    "usage": {
+      "prompt_tokens": 5,
+      "completion_tokens": 7,
+      "total_tokens": 12
+    }
+  }' http://localhost:8080/v2/convert/json?name=Root
+```
 
 ## Docker
 Docker image is built using the sbt-native-packager/docker plugin.

@@ -1,7 +1,7 @@
 package json2struct.api
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import json2struct.api.JsonSupport._
+import json2struct.api.JsonSupport.*
 import spray.json.{DefaultJsonProtocol, RootJsonFormat}
 
 trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
