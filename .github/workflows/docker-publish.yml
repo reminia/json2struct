@@ -2,22 +2,22 @@ name: publish api docker image
 
 on:
   workflow_dispatch:
+    inputs:
+      latest:
+        description: 'whether release latest docker image'
+        type: choice
+        default: 'false'
+        options:
+          - true
+          - false
 
 permissions:
   contents: write
   packages: write
 
-
 jobs:
   docker:
     runs-on: ubuntu-latest
-
-    inputs:
-      parameters:
-        latest:
-          description: 'whether release latest docker image'
-          default: 'false'
-
     steps:
       - name: checkout code
         uses: actions/checkout@v3
@@ -33,7 +33,9 @@ jobs:
         run: |
           echo "release latest image ${{ inputs.latest }}"
           if [[ "${{ inputs.latest }}" != "false" ]]; then
-            sbt -Ddocker.image.version=latest "project api" docker:publish
+            echo "latest"
+            # sbt -Ddocker.image.version=latest "project api" docker:publish
           else
+            echo "non latest"
             # sbt "project api" docker:publish
           fi
