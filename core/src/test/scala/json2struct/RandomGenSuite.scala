@@ -32,7 +32,7 @@ class RandomGenSuite extends AnyWordSpec with PrivateMethodTester {
 
     "generate data of deep nested GoStruct" should {
       "not stackoverflow" in {
-        val struct = Struct("root", Seq.empty)
+        val struct = Struct("Root", Seq.empty)
         val map = mutable.HashMap.empty[String, Struct]
         val gen = Gen.alphaStr
         (1 to 10000).foldLeft[Struct](struct) {
@@ -48,7 +48,7 @@ class RandomGenSuite extends AnyWordSpec with PrivateMethodTester {
             res
         }
         noException shouldBe thrownBy {
-          new RandomGen(APP_CONF) invokePrivate method(GoStruct("root"), map.toMap)
+          new RandomGen(APP_CONF) invokePrivate method(GoStruct("Root"), map.toMap)
         }
       }
     }

@@ -51,7 +51,7 @@ object Converter {
   private def parseJsonField(field: JField): Field.Simple = {
     val (name, value) = field
     val _name = name.upperCamelCase
-    val tag = Tag.Simple(Map("json" -> Seq(name)))
+    val tag = Tag.Simple(Map(JSON_TAG -> Seq(name)))
     Field.Simple(_name, GoType.apply(_name, value), tag)
   }
 
