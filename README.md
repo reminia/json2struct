@@ -14,7 +14,7 @@ It's needed frequently to convert between http request/response body and struct 
 * unzip the [zip](https://github.com/reminia/json2struct/releases) package,
   run it by `bin/cli` or `bin/api` script.
 
-Or you can get the packages from releases page.
+Or get the packages from Releases page.
 
 ## Modules
 
