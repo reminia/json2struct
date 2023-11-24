@@ -14,11 +14,13 @@ It's needed frequently to convert between http request/response body and struct 
 * unzip the [zip](https://github.com/reminia/json2struct/releases) package,
   run it by `bin/cli` or `bin/api` script.
 
+Or you can get the packages from releases page.
+
 ## Modules
 
 * core, the core conversion logic.
-* cil, a simple cli tool that wraps the conversion logic, a zip is released for this module.
-* api, a simple rest api that serves the conversion, a zip and a docker image are released for direct usage.
+* [cli](cli/README.md), a simple cli tool that wraps the conversion logic, a zip is released for this module.
+* [api](api/README.md), a simple rest api that serves the conversion, a zip and a docker image are released for direct usage.
 
 ## json2struct
 
