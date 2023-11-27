@@ -13,8 +13,9 @@ After packaging, you can use it with:
  ```bash
   bin/cli -j Root '{"usage": {"prompt_tokens": 5, "completion_tokens": 7, "total_tokens": 12}}'
 
-  bin/cli ' type Data struct {
-   Value int
-   Type string
+  bin/cli 'type Person struct {
+   Name string
+   Age int
+   FavoriteMovie string
   }'
  ```
