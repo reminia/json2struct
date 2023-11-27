@@ -10,7 +10,7 @@ A simple rest [api](src/main/scala/json2struct/api/Server.scala) that servers th
 3. `GET /health`, query server healthy status.
 4. `POST /v2/convert/json?name=xxx`, convert json to struct. Query name is the root struct type name,
 request body is plain json data. It's easy to use than the v1 one.
-5. `POST /v2/convert/struct`, convert struct to json. The request body is plain struct types and a new header config
+5. `POST /v2/convert/struct`, convert struct to json. The request body is plain struct types and a new header **config**
 is added to support converter configuration. The header is optional.
 
 Try it with below curl commands:
