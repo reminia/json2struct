@@ -11,11 +11,11 @@ After packaging, you can use it with:
  Try it with:
 
  ```bash
-  bin/cli -j Root '{"usage": {"prompt_tokens": 5, "completion_tokens": 7, "total_tokens": 12}}'
+bin/cli -j Root '{"usage": {"prompt_tokens": 5, "completion_tokens": 7, "total_tokens": 12}}'
 
-  bin/cli 'type Person struct {
+bin/cli 'type Person struct {
    Name string
    Age int
    FavoriteMovie string
-  }'
+}'
  ```

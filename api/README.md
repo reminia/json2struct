@@ -16,9 +16,10 @@ Try it with below curl commands:
 ```bash
 curl http://localhost:8080/health
 
-curl -X POST -d 'type Data struct {
- Type string
- Value int
+curl -X POST -d 'type Person struct {
+  Name string
+  Age int
+  FavoriteMovie string
 }' http://localhost:8081/v1/convert/struct
 
 curl -X POST -H "Content-Type: application/json"  -d '{
