@@ -23,16 +23,16 @@ object JsonSupport {
   implicit object AnyFormat extends JsonFormat[Any] {
     override def write(any: Any): JsValue = any match {
       case b: Boolean => JsBoolean(b)
-      case i: Int => JsNumber(i)
-      case s: String => JsString(s)
+      case i: Int     => JsNumber(i)
+      case s: String  => JsString(s)
       case _ =>
         throw new SerializationException(s"cannot serialize $any, type not support")
     }
 
     override def read(json: JsValue): Any = json match {
       case JsBoolean(b) => b
-      case JsString(s) => s
-      case JsNumber(n) => n
+      case JsString(s)  => s
+      case JsNumber(n)  => n
       case _ => throw DeserializationException(s"cannot deserialize $json, type not support")
     }
   }

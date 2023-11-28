@@ -14,7 +14,7 @@ sealed trait GoType {
 
   def isStruct: Boolean = this match {
     case _: GoStruct => true
-    case _ => false
+    case _           => false
   }
 
 }
@@ -59,46 +59,43 @@ object GoType {
   }
 
   case class GoStruct(name: String) extends GoType {
-    override def desc: String = {
+    override def desc: String =
       if (name.isEmpty)
         ANY
       else name.upperCamelCase
-    }
   }
 
   case object GoAny extends GoType {
     override def desc: String = ANY
   }
 
-  def from(tpe: String): GoType = {
+  def from(tpe: String): GoType =
     (tpe: @switch) match {
-      case "int" => GoInt
-      case "int32" => GoInt32
-      case "uint64" => GoUInt64
-      case "rune" => GoChar
-      case "byte" => GoByte
+      case "int"     => GoInt
+      case "int32"   => GoInt32
+      case "uint64"  => GoUInt64
+      case "rune"    => GoChar
+      case "byte"    => GoByte
       case "float32" => GoFloat32
-      case "string" => GoString
-      case "bool" => GoBool
-      case "any" => GoAny
+      case "string"  => GoString
+      case "bool"    => GoBool
+      case "any"     => GoAny
       // unknown types default to struct type
       case sth => GoStruct(sth)
     }
-  }
 
-  def apply(name: String, value: JValue): GoType = {
+  def apply(name: String, value: JValue): GoType =
     value match {
-      case JInt(_) => GoInt
-      case JDouble(_) => GoFloat32
+      case JInt(_)                => GoInt
+      case JDouble(_)             => GoFloat32
       case JLong(num) if num >= 0 => GoUInt64
-      case JString(_) => GoString
-      case JBool(_) => GoBool
+      case JString(_)             => GoString
+      case JBool(_)               => GoBool
       case JArray(arr) =>
         if (arr.isEmpty) GoArray(GoAny)
         else GoArray(GoType(name, arr.head))
       case JObject(_) => GoStruct(name)
-      case _ => GoAny
+      case _          => GoAny
     }
-  }
 
 }

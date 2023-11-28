@@ -6,7 +6,7 @@ import java.nio.file.Paths
 import scala.language.implicitConversions
 
 object Conf {
-  val HOME = sys.env.getOrElse("JSON2STRUCT_HOME", "/opt/json2struct")
+  val HOME     = sys.env.getOrElse("JSON2STRUCT_HOME", "/opt/json2struct")
   val APP_CONF = loadConf().resolve()
 
   def loadConf(): Config = {

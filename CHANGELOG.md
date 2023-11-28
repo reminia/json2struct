@@ -25,3 +25,4 @@
 * add a new v2 json2struct endpoint with name as query parameter and json as body
 * support to release latest docker image based on newest code in github ci
 * add a new v2 struct2json endpoint to support converter customization with config header
+* add scalafmt conf

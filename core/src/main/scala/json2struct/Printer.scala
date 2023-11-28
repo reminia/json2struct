@@ -28,7 +28,7 @@ object Printer {
   object Syntax {
 
     class StringOps(s: String) {
-      def snakeCase: String = {
+      def snakeCase: String =
         s.foldLeft((new StringBuilder(), false)) {
           case ((sb, isUpper), ch) =>
             if (sb.isEmpty && ch.isUpper) {
@@ -41,7 +41,6 @@ object Printer {
               sb.append(ch) -> false
             }
         }._1.toString()
-      }
 
       // uppercase first char
       def upperFst: String = s.toList match {
@@ -58,9 +57,8 @@ object Printer {
       }
 
       // snake case to upper camel case
-      def upperCamelCase: String = {
+      def upperCamelCase: String =
         s.split("_").map(_.upperFst).mkString("")
-      }
     }
 
     implicit def toStringOps(s: String): StringOps = new StringOps(s)
@@ -87,13 +85,12 @@ object Printer {
   implicit object FieldPrinter extends Printer[Field] {
     override def print(t: Field): String = {
 
-      def jsonTag(): String = {
+      def jsonTag(): String =
         t.tag match {
           case Tag.None => backtick(colon("json", quote(t.name)))
           case _ =>
             t.tag.print()
         }
-      }
 
       val sb = new StringBuilder()
       sb.append(indent())

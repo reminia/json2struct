@@ -13,12 +13,12 @@ object GoStructAST {
 
     def isArray: Boolean = tpe match {
       case _: GoArray => true
-      case _ => false
+      case _          => false
     }
 
     def isStruct: Boolean = this match {
       case _: Struct => true
-      case _ => false
+      case _         => false
     }
   }
 
@@ -30,7 +30,6 @@ object GoStructAST {
       extends Field
   }
 
-
   sealed trait Tag
 
   object Tag {
@@ -40,9 +39,8 @@ object GoStructAST {
   }
 
   case class Struct(name: String, fields: Seq[Field], tag: Tag = Tag.None) extends Field {
-    def this(name: String) = {
+    def this(name: String) =
       this(name, Seq.empty)
-    }
 
     override def tpe: GoType = GoType.GoStruct(name)
   }

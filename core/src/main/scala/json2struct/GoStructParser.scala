@@ -11,12 +11,14 @@ import scala.util.parsing.combinator.JavaTokenParsers
  */
 object GoStructParser extends JavaTokenParsers {
 
-  lazy val goType: Parser[GoType] = (
-    "int" | "int32" | "uint64" | "float32"
-      | "rune" | "byte"
-      | "bool" | "string"
-      | "any"
-      | ident) ^^ GoType.from
+  lazy val goType: Parser[GoType] =
+    (
+      "int" | "int32" | "uint64" | "float32"
+        | "rune" | "byte"
+        | "bool" | "string"
+        | "any"
+        | ident
+    ) ^^ GoType.from
 
   def quote[T](inside: Parser[T]): Parser[T] = "\"" ~> inside <~ "\""
 
@@ -44,7 +46,7 @@ object GoStructParser extends JavaTokenParsers {
 
   lazy val array: Parser[Field] = ident ~ "[]" ~ goType ~ tag.? ^^ {
     case name ~ _ ~ tpe ~ t if t.nonEmpty => Field.Simple(name, GoArray(tpe), t.get)
-    case name ~ _ ~ tpe ~ _ => Field.Simple(name, GoArray(tpe))
+    case name ~ _ ~ tpe ~ _               => Field.Simple(name, GoArray(tpe))
   }
 
   lazy val field: Parser[Field] = (ident ~ goType ~ tag.?) ^^ {
@@ -58,8 +60,8 @@ object GoStructParser extends JavaTokenParsers {
 
   lazy val lineComment: Parser[String] = log("//.*".r)("single")
 
-  lazy val multiline: Parser[String] = log("""/\*.*(\n*.*)*\*/""".r)("multiline")
-  lazy val nested: Parser[String] = """/\*.*(\n*.*)*/\*""".r
+  lazy val multiline: Parser[String]        = log("""/\*.*(\n*.*)*\*/""".r)("multiline")
+  lazy val nested: Parser[String]           = """/\*.*(\n*.*)*/\*""".r
   lazy val multilineComment: Parser[String] = multiline - log(nested)("nest")
 
   lazy val test: Parser[String] = ".+".r <~ "/*" ^^ (_.mkString)
@@ -69,13 +71,12 @@ object GoStructParser extends JavaTokenParsers {
 
   lazy val structs: Parser[Seq[Struct]] = struct.*
 
-  def parse(input: String): Option[Seq[Struct]] = {
+  def parse(input: String): Option[Seq[Struct]] =
     parseAll(structs, input) match {
       case Success(res, _) => Some(res)
       case NoSuccess(msg, _) =>
         println(msg)
         None
     }
-  }
 
 }

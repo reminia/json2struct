@@ -65,8 +65,9 @@ object Server extends Directives with JsonSupport {
                   }.asJava
                   complete {
                     Converter.convertStruct(
-                        struct,
-                        ConfigFactory.parseMap(conf).withFallback(APP_CONF))
+                      struct,
+                      ConfigFactory.parseMap(conf).withFallback(APP_CONF)
+                    )
                       .map(_.print())
                       .mkString(System.lineSeparator())
                   }
@@ -75,7 +76,6 @@ object Server extends Directives with JsonSupport {
             }
           }
       },
-
       path("health") {
         get {
           complete(StatusCodes.OK, "I'm up!")
