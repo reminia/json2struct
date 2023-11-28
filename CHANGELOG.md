@@ -22,6 +22,6 @@
 * remove redundant Field.Struct type
 * struct to json should lower the first letter of json key
 * add snake-case conf to support converting to snake-case style json props
-* add a new json2struct endpoint with name as query parameter and json as body
+* add a new v2 json2struct endpoint with name as query parameter and json as body
 * support to release latest docker image based on newest code in github ci
-* add a new struct2json endpoint to support converter customization with config header
+* add a new v2 struct2json endpoint to support converter customization with config header
