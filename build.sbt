@@ -2,7 +2,7 @@ import Build.*
 
 name := "json2struct"
 
-val projectVersion = "0.4.0-SNAPSHOT"
+val projectVersion = "0.4.0"
 val scala2version = "2.13.12"
 val javaVersion = "11"
 val apiDockerVersion = "0.2"

@@ -16,7 +16,7 @@
 * fix bug for single struct conversion
 * not generate the field if json tag is '-'
 
-## 0.4.0 [ongoing]
+## 0.4.0 
 * unknown type to any type
 * convert snake case name to upper camel case
 * remove redundant Field.Struct type
