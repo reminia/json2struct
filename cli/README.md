@@ -1,7 +1,6 @@
 # cli
 
-It's a simple [cli](src/main/scala/json2struct/cli/Cli.scala) tool.
-After packaging, you can use it with:
+It's a simple cli tool.
 
 * `bin/cli --help`, show help message.
 * `bin/cli "struct content"`, convert struct to random json data.

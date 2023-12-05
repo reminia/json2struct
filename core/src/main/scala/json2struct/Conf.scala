@@ -18,6 +18,6 @@ object Conf {
   }
 
   implicit class AppConf(conf: Config) {
-    def snakeCaseEnabled: Boolean = conf.getBoolean("struct2json.snake-case")
+    val snakeCaseEnabled: Boolean = conf.getBoolean("struct2json.snake-case")
   }
 }

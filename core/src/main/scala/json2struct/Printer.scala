@@ -99,7 +99,7 @@ object Printer {
         .append(t.tpe.desc)
         .append(indent(2))
         .append(jsonTag())
-      sb.toString
+        .toString()
     }
 
   }
@@ -110,7 +110,7 @@ object Printer {
       sb.append(s"type ${s.name} struct {")
         .append(s.fields.map(_.print()).mkString(newline, newline, newline))
         .append("}")
-      sb.toString()
+        .toString()
     }
   }
 
