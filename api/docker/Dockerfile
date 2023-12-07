@@ -10,4 +10,3 @@ VOLUME /opt/json2struct
 expose 8080
 
 ENTRYPOINT ["/opt/json2struct/bin/api"]
-CMD []
