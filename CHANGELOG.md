@@ -26,3 +26,6 @@
 * support to release latest docker image based on newest code in github ci
 * add a new v2 struct2json endpoint to support converter customization with config header
 * add scalafmt conf
+
+## 0.4.1 [WIP]
+* minor code optimization
