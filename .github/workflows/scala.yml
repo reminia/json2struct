@@ -24,3 +24,5 @@ jobs:
         
     - name: Compile & test
       run: sbt compile test
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
