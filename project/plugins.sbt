@@ -3,11 +3,6 @@ addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.2")
 resolvers += Resolver.url("GitHub Package Registry", url("https://maven.pkg.github.com/reminia/_"))(
   Resolver.ivyStylePatterns
 )
-//credentials += Credentials(
-//  "GitHub Package Registry",
-//  "maven.pkg.github.com",
-//  "reminia",
-//  System.getenv("GITHUB_TOKEN")
-//)
-
+import Build.githubCredential
+credentials += githubCredential
 addSbtPlugin("me.yceel" % "sbt-curl" % "0.1.0")

@@ -14,15 +14,17 @@ object Build {
     publishArtifact := false
   )
 
+  val githubCredential = Credentials(
+    "GitHub Package Registry",
+    "maven.pkg.github.com",
+    System.getenv("GITHUB_REPOSITORY_OWNER"),
+    System.getenv("GITHUB_TOKEN")
+  )
+
   val publishSettings = Seq(
     publishTo := Some("Github repo" at "https://maven.pkg.github.com/" + System.getenv("GITHUB_REPOSITORY")),
     publishMavenStyle := true,
-    credentials += Credentials(
-      "GitHub Package Registry",
-      "maven.pkg.github.com",
-      System.getenv("GITHUB_REPOSITORY_OWNER"),
-      System.getenv("GITHUB_TOKEN")
-    ),
+    credentials += githubCredential,
     Test / packageDoc / publishArtifact := false,
     Test / packageSrc / publishArtifact := false,
     Test / packageBin / publishArtifact := false,
