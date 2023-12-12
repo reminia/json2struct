@@ -1,0 +1,28 @@
+curl http://localhost:8080/health
+
+curl -X POST -d 'type Person struct {
+  Name string
+  Age int
+  FavoriteMovie string
+}' http://localhost:8080/v1/convert/struct
+
+curl -X POST -H "Content-Type: application/json"  -d '{
+  "name": "Root",
+  "json": "{\"usage\":{\"prompt_tokens\":5,\"completion_tokens\":7,\"total_tokens\":12}}"}' \
+  http://localhost:8080/v1/convert/json
+
+curl -X POST -d '{
+    "usage": {
+      "prompt_tokens": 5,
+      "completion_tokens": 7,
+      "total_tokens": 12
+    }
+  }' http://localhost:8080/v2/convert/json?name=Root
+
+curl -X POST -H "Content-Type: application/json" \
+-H 'config: {"struct2json.snake-case": true}' \
+-d 'type Person struct {
+  Name string
+  Age int
+  FavoriteMovie string
+}' http://localhost:8080/v2/convert/struct

@@ -10,4 +10,4 @@ credentials += Credentials(
   System.getenv("GITHUB_REPOSITORY_OWNER"),
   System.getenv("GITHUB_TOKEN")
 )
-addSbtPlugin("me.yceel" % "sbt-curl" % "0.1.0")
+addSbtPlugin("me.yceel" % "sbt-curl" % "0.1.1")

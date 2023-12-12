@@ -85,5 +85,9 @@ lazy val api = project
     Docker / version := apiDockerVersion,
     dockerCommands := Seq(),
     dockerCommands ++= dockerfile("api/docker/Dockerfile")
-  )
-  .dependsOn(core)
+  ).settings(
+    Test / test := Def.sequential(
+      (Compile / run).toTask(""),
+      curlTest
+    ).value
+  ).dependsOn(core)
