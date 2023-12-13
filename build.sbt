@@ -20,14 +20,14 @@ val commonSettings = Seq(
 
 lazy val root = project
   .in(file("."))
-  .settings(moduleName := "root")
+  .settings(name := "root")
   .settings(noPublish *)
   .settings(commonSettings)
   .aggregate(core, cli, api)
 
 lazy val core = project
   .in(file("core"))
-  .settings(moduleName := "core")
+  .settings(name := "core")
   .enablePlugins(JavaAppPackaging)
   .settings(commonSettings *)
   .settings(publishSettings *)
@@ -42,7 +42,7 @@ lazy val core = project
 
 lazy val cli = project
   .in(file("cli"))
-  .settings(moduleName := "cli")
+  .settings(name := "cli")
   .enablePlugins(JavaAppPackaging, UniversalPlugin)
   .settings(commonSettings *)
   .settings(publishSettings *)
@@ -60,7 +60,7 @@ lazy val cli = project
 
 lazy val api = project
   .in(file("api"))
-  .settings(moduleName := "api")
+  .settings(name := "api")
   .enablePlugins(JavaServerAppPackaging, UniversalPlugin, DockerPlugin)
   .settings(commonSettings *)
   .settings(publishSettings *)
