@@ -13,11 +13,13 @@ import json2struct.api.JsonSupport.*
 import spray.json.*
 
 import scala.jdk.CollectionConverters.MapHasAsJava
+import scala.util.{Failure, Success}
 
 object Server extends Directives with JsonSupport {
 
   def main(args: Array[String]): Unit = {
     implicit val system = ActorSystem("server", APP_CONF)
+    implicit val ec     = system.dispatcher
 
     val route = concat(
       pathPrefix("v1" / "convert") {
@@ -83,8 +85,14 @@ object Server extends Directives with JsonSupport {
       }
     )
 
-    Http().newServerAt("0.0.0.0", HttpPort).bind(route)
-    println(s"Server started on 0.0.0.0:$HttpPort")
+    Http().newServerAt("0.0.0.0", HttpPort)
+      .bind(route)
+      .onComplete {
+        case Success(_) =>
+          println(s"Server started on 0.0.0.0:$HttpPort")
+        case Failure(e) =>
+          println(s"Server started failed on 0.0.0.0:$HttpPort due to " + e.getMessage)
+      }
   }
 
 }
