@@ -18,7 +18,7 @@ Or get the packages from Releases page.
 
 ## Modules
 
-* core, the core conversion logic.
+* [core](core/README.md), the core conversion logic.
 * [cli](cli/README.md), a simple cli tool that wraps the conversion logic, a zip is released for this module.
 * [api](api/README.md), a simple rest api that serves the conversion, a zip and a docker image are released for direct usage.
 

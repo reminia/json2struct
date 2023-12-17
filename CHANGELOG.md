@@ -30,3 +30,4 @@
 ## 0.4.1 [WIP]
 * minor code optimization
 * test api with sbt-curl plugin
+* add readme for core module 
