@@ -18,7 +18,7 @@ object GoStructParser extends JavaTokenParsers {
         | "bool" | "string"
         | "any"
         | ident
-    ) ^^ GoType.from
+      ) ^^ GoType.from
 
   def quote[T](inside: Parser[T]): Parser[T] = "\"" ~> inside <~ "\""
 
@@ -46,7 +46,7 @@ object GoStructParser extends JavaTokenParsers {
 
   lazy val array: Parser[Field] = ident ~ "[]" ~ goType ~ tag.? ^^ {
     case name ~ _ ~ tpe ~ t if t.nonEmpty => Field.Simple(name, GoArray(tpe), t.get)
-    case name ~ _ ~ tpe ~ _               => Field.Simple(name, GoArray(tpe))
+    case name ~ _ ~ tpe ~ _ => Field.Simple(name, GoArray(tpe))
   }
 
   lazy val field: Parser[Field] = (ident ~ goType ~ tag.?) ^^ {
@@ -59,17 +59,21 @@ object GoStructParser extends JavaTokenParsers {
   def curly[T](in: Parser[T]): Parser[T] = "{" ~> in <~ "}"
 
   lazy val lineComment: Parser[String] = log("//.*".r)("single")
-
-  lazy val multiline: Parser[String]        = log("""/\*.*(\n*.*)*\*/""".r)("multiline")
-  lazy val nested: Parser[String]           = """/\*.*(\n*.*)*/\*""".r
+  lazy val multiline: Parser[String] = log("""/\*.*(\n*.*)*\*/""".r)("multiline")
+  lazy val nested: Parser[String] = """/\*.*(\n*.*)*/\*""".r
   lazy val multilineComment: Parser[String] = multiline - log(nested)("nest")
 
-  lazy val test: Parser[String] = ".+".r <~ "/*" ^^ (_.mkString)
-  lazy val struct: Parser[Struct] = ("type" ~> ident ~ "struct" ~ curly(field.*)) ^^ {
+  lazy val comment = lineComment | multilineComment
+
+  lazy val _field = comment.* ~> field <~ comment.*
+
+  lazy val struct: Parser[Struct] = ("type" ~> ident ~ "struct" ~ curly(_field.*)) ^^ {
     case name ~ _ ~ seq => Struct(name, seq)
   }
 
-  lazy val structs: Parser[Seq[Struct]] = struct.*
+  lazy val _struct = comment.* ~> struct <~ comment.*
+
+  lazy val structs: Parser[Seq[Struct]] = _struct.*
 
   def parse(input: String): Option[Seq[Struct]] =
     parseAll(structs, input) match {

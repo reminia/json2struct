@@ -27,7 +27,8 @@
 * add a new v2 struct2json endpoint to support converter customization with config header
 * add scalafmt conf
 
-## 0.4.1 [WIP]
+## 0.5.0 [WIP]
 * minor code optimization
 * test api with sbt-curl plugin
 * add readme for core module 
+* support struct type with comment(line & multiline)

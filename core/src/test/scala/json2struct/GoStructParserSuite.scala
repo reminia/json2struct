@@ -94,6 +94,25 @@ class GoStructParserSuite extends AnyWordSpec {
         |""".stripMargin
       parse(multilineComment, paired) shouldBe None
     }
+
+    "parse struct type with comment" in {
+      val struct =
+        """
+          |/*
+          | token usage type
+          |*/
+          |type Usage struct {
+          |              Completion_tokens int     `json:"completion_tokens"` // completion tokens
+          |              Prompt_tokens int     `json:"prompt_tokens"`
+          |              Total_tokens int     `json:"total_tokens"`
+          |}
+          |// end of the type
+          |""".stripMargin
+      val parseResult = GoStructParser.parse(struct)
+      parseResult.isDefined shouldBe true
+      val usage = parseResult.get.head
+      usage.fields.map(_.name) should contain theSameElementsAs Seq("Completion_tokens", "Prompt_tokens", "Total_tokens")
+    }
   }
 
   def parse[T](p: GoStructParser.Parser[T], input: String): Option[T] = {
