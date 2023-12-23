@@ -21,7 +21,7 @@ val commonSettings = Seq(
 lazy val root = project
   .in(file("."))
   .settings(name := "root")
-  .settings(noPublish *)
+  .settings(noPublish)
   .settings(commonSettings)
   .aggregate(core, cli, api)
 
@@ -29,8 +29,8 @@ lazy val core = project
   .in(file("core"))
   .settings(name := "core")
   .enablePlugins(JavaAppPackaging)
-  .settings(commonSettings *)
-  .settings(publishSettings *)
+  .settings(commonSettings)
+  .settings(publishSettings)
   .settings(
     libraryDependencies ++= Seq(
       "org.json4s" %% "json4s-native" % "4.0.6",
@@ -44,8 +44,8 @@ lazy val cli = project
   .in(file("cli"))
   .settings(name := "cli")
   .enablePlugins(JavaAppPackaging, UniversalPlugin)
-  .settings(commonSettings *)
-  .settings(publishSettings *)
+  .settings(commonSettings)
+  .settings(publishSettings)
   .settings(
     libraryDependencies ++= Seq(
       "org.rogach" %% "scallop" % "5.0.0"
@@ -62,8 +62,8 @@ lazy val api = project
   .in(file("api"))
   .settings(name := "api")
   .enablePlugins(JavaServerAppPackaging, UniversalPlugin, DockerPlugin)
-  .settings(commonSettings *)
-  .settings(publishSettings *)
+  .settings(commonSettings)
+  .settings(publishSettings)
   .settings(
     resolvers += "Akka repo".at("https://repo.akka.io/maven"),
     libraryDependencies ++= Seq(
@@ -79,7 +79,7 @@ lazy val api = project
       "export JSON2STRUCT_HOME=$app_home/../"
     ),
   )
-  .settings(commonDockerSettings *)
+  .settings(commonDockerSettings)
   .settings(
     Docker / packageName := "json2struct-api",
     Docker / version := apiDockerVersion,
