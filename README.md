@@ -7,6 +7,16 @@ generation.
 
 It's needed frequently to convert between http request/response body and struct types in Golang.
 
+## Features
+
+* json to go struct type
+* struct type to random json data
+* support json tag in go struct
+* support both snake case & camel case of field name
+* support parsing struct type with comment
+* rest api
+* cli tool
+
 ## Build & Run
 
 * `sbt compile test`, compile and test it.
