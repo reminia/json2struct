@@ -27,7 +27,7 @@
 * add a new v2 struct2json endpoint to support converter customization with config header
 * add scalafmt conf
 
-## 0.5.0 [WIP]
+## 0.5.0 
 * minor code optimization
 * test api with sbt-curl plugin
 * add readme for core module 
