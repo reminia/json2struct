@@ -21,11 +21,9 @@ It's needed frequently to convert between http request/response body and struct 
 
 * setup GITHUB_REPOSITORY_OWNER and GITHUB_TOKEN env variable to access github package registry.
 * `sbt compile test`, compile and test it.
-* `sbt universal:packageBin`, package the zip which lies in target/universal folder.
+* `sbt universal:packageBin`, package zip which lies in target/universal folder.
 * unzip the [zip](https://github.com/reminia/json2struct/releases) package,
   run it by `bin/cli` or `bin/api` script.
-
-Or get the packages from Releases page.
 
 ## Modules
 
