@@ -32,3 +32,6 @@
 * test api with sbt-curl plugin
 * add readme for core module 
 * support struct type with comment(line & multiline)
+
+## 0.6.0 (TBD)
+* parsing nested struct type
