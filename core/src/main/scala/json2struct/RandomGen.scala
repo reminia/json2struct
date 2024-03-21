@@ -16,11 +16,17 @@ class RandomGen(conf: Config) {
 
   // Seq[Any] is actually Seq[Map[String, Any]]
   def genStructs(ss: Seq[Struct]): Seq[Any] = {
-    val context = ss.map(s => s.name -> s).toMap
+    val context = ss.flatMap(struct2structs).map(s => s.name -> s).toMap
     val graph   = Graph.from(ss)
     graph.sources.map(context.apply)
       .map(s => gotype2value(GoStruct(s.name), context).sample.get)
       .toSeq
+  }
+
+  // extract out nested struct type field
+  def struct2structs(s: Struct): Set[Struct] = {
+    val seq = Seq.newBuilder[Struct]
+    Set(s) ++ s.fields.toSet.filter(_.isStruct).map(_.asStruct).flatMap(struct2structs)
   }
 
   private def gotype2value(tpe: GoType, given: Map[String, Struct]): Gen[Any] = {

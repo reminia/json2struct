@@ -1,6 +1,5 @@
 package json2struct
 
-import json2struct.GoStructAST.Struct
 import json2struct.GoStructParser.{lineComment, multilineComment}
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
@@ -132,7 +131,7 @@ class GoStructParserSuite extends AnyWordSpec {
       val structs = parseResult.get
       structs.size should be(1)
       val student = structs.head
-      val address = student.fields.filter(_.isStruct).head.asInstanceOf[Struct]
+      val address = student.fields.filter(_.isStruct).head.asStruct
       address.fields.map(_.name) should contain theSameElementsAs Seq("Home", "Office")
     }
   }

@@ -84,4 +84,26 @@ class RandomGenSuite extends AnyWordSpec with PrivateMethodTester {
     }
   }
 
+  "RandomGen" should {
+    val struct =
+      """
+        |type Student struct {
+        |  Name string
+        |  Age int
+        |  Address struct {
+        |    Home string
+        |    Office string
+        |  }
+        |}
+        |""".stripMargin
+    "gen data of nested struct types" in {
+      val structs = new RandomGen(APP_CONF)
+        .genStructs(GoStructParser.parse(struct).get)
+      val anyMap = structs.head.asInstanceOf[Map[String, Any]]
+      anyMap.size shouldBe 3
+      anyMap.keys should contain("address")
+    }
+  }
+
+
 }

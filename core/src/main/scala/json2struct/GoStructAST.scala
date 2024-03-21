@@ -20,6 +20,8 @@ object GoStructAST {
       case _: Struct => true
       case _         => false
     }
+
+    def asStruct: Struct = this.asInstanceOf[Struct]
   }
 
   object Field {
