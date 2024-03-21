@@ -61,8 +61,7 @@ curl -X POST -H "Content-Type: application/json" \
 
 ## Docker
 Docker image is built using the sbt-native-packager/docker plugin.
-* Run `sbt docker:publishLocal` to build the image.
-* Start the container by `docker run -d  -p 8080:8080 ghcr.io/reminia/json2struct-api`.
-* Or use the one I have published to gcr by `docker pull ghcr.io/reminia/json2struct-api`.
+* Run `sbt docker:publishLocal` to build the image or pull the image from gcr by `docker pull ghcr.io/reminia/json2struct-api`.
+* Start the server by `docker run -d  -p 8080:8080 ghcr.io/reminia/json2struct-api`.
 
 Latest version is up-to-date with the newest code.
