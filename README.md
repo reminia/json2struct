@@ -9,11 +9,12 @@ It's needed frequently to convert between http request/response body and struct 
 
 ## Features
 
-* json to go struct type
-* struct type to random json data
-* support json tag in go struct
-* support both snake case & camel case of field name
-* support parsing struct type with comment
+* json to Golang struct type
+* struct type to json
+* support struct type with json tag
+* support both snake case & camel case of field names
+* support struct type with comments
+* support nested struct type
 * rest api
 * cli tool
 
