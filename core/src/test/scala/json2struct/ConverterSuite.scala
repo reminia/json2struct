@@ -100,6 +100,26 @@ class ConverterSuite extends AnyWordSpec {
         seq.foreach { m => println(m.print()) }
       }
     }
+
+    "convert nested struct type to json" in {
+      val struct =
+        """
+          |type Student struct {
+          |  Name string
+          |  Age int
+          |  Address struct {
+          |    Home string
+          |    Office string
+          |  }
+          |}
+          |""".stripMargin
+      val seq = Converter.convertStruct(struct)
+      val map = seq.head.asInstanceOf[Map[String, Any]]
+      map.keys should contain theSameElementsAs Seq("address", "name", "age")
+      noException shouldBe thrownBy {
+        seq.foreach { m => println(m.print()) }
+      }
+    }
   }
 
 }
