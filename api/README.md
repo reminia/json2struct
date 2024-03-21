@@ -37,12 +37,25 @@ curl -X POST -d '{
     }
   }' http://localhost:8080/v2/convert/json?name=Root
 
+# convert struct to json with snake-case enabled
 curl -X POST -H "Content-Type: application/json" \
 -H 'config: {"struct2json.snake-case": true}' \
 -d 'type Person struct {
   Name string
   Age int
   FavoriteMovie string
+}' http://localhost:8080/v2/convert/struct
+
+# convert nested struct type to json
+curl -X POST -H "Content-Type: application/json" \
+-H 'config: {"struct2json.snake-case": true}' \
+-d 'type Student struct {
+  Name string
+  Age int
+  Address struct {
+    Home string
+    Office string
+  }
 }' http://localhost:8080/v2/convert/struct
 ```
 
