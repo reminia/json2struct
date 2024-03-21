@@ -11,16 +11,19 @@ import scala.util.parsing.combinator.JavaTokenParsers
  */
 object GoStructParser extends JavaTokenParsers {
 
+  // struct is a reserve word
+  lazy val structType: Parser[String] = ident.filter(!_.equals("struct"))
+
   lazy val goType: Parser[GoType] =
     (
       "int" | "int32" | "uint64" | "float32"
         | "rune" | "byte"
         | "bool" | "string"
         | "any"
-        | ident
+        | structType
     ) ^^ GoType.from
 
-  def quote[T](inside: Parser[T]): Parser[T] = "\"" ~> inside <~ "\""
+  def quote[T](in: Parser[T]): Parser[T] = "\"" ~> in <~ "\""
 
   lazy val tagProp: Parser[String] = ident | "-"
 
@@ -49,12 +52,16 @@ object GoStructParser extends JavaTokenParsers {
     case name ~ _ ~ tpe ~ _               => Field.Simple(name, GoArray(tpe))
   }
 
+  lazy val nestedStruct: Parser[Struct] = (ident ~ "struct" ~ curly(_field.*)) ^^ {
+    case name ~ _ ~ seq => Struct(name, seq)
+  }
+
   lazy val field: Parser[Field] = (ident ~ goType ~ tag.?) ^^ {
     case name ~ tpe ~ t if tpe.isStruct =>
       Struct(name, Seq(), t.fold[Tag](Tag.None)(identity))
     case name ~ tpe ~ t =>
       Field.Simple(name, tpe, t.fold[Tag](Tag.None)(identity))
-  } | array
+  } | array | log(nestedStruct)("NestedStruct")
 
   def curly[T](in: Parser[T]): Parser[T] = "{" ~> in <~ "}"
 

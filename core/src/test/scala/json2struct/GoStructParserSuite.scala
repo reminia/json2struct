@@ -1,5 +1,6 @@
 package json2struct
 
+import json2struct.GoStructAST.Struct
 import json2struct.GoStructParser.{lineComment, multilineComment}
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
@@ -113,11 +114,32 @@ class GoStructParserSuite extends AnyWordSpec {
       val usage = parseResult.get.head
       usage.fields.map(_.name) should contain theSameElementsAs Seq("Completion_tokens", "Prompt_tokens", "Total_tokens")
     }
+
+    "parse nested struct type" in {
+      val struct =
+        """
+          |type Student struct {
+          |  Name string
+          |  Age int
+          |  Address struct {
+          |    Home string
+          |    Office string
+          |  }
+          |}
+          |""".stripMargin
+      val parseResult = GoStructParser.parse(struct)
+      parseResult.isDefined shouldBe true
+      val structs = parseResult.get
+      structs.size should be(1)
+      val student = structs.head
+      val address = student.fields.filter(_.isStruct).head.asInstanceOf[Struct]
+      address.fields.map(_.name) should contain theSameElementsAs Seq("Home", "Office")
+    }
   }
 
   def parse[T](p: GoStructParser.Parser[T], input: String): Option[T] = {
     GoStructParser.parse(p, input) match {
-      case GoStructParser.Success(res, _) => Option(res)
+      case GoStructParser.Success(res, _) => Some(res)
       case _ => None
     }
   }
