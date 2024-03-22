@@ -33,5 +33,15 @@
 * add readme for core module 
 * support struct type with comment(line & multiline)
 
-## 0.6.0 (TBD)
-* parsing nested struct type
+## 0.6.0 
+* support nested struct type
+```golang
+type Student struct {
+  Name string
+  Age int     
+  Address struct {
+    Home string  
+    Office: string
+  }
+}
+```
