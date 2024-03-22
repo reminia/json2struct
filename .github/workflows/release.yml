@@ -7,6 +7,9 @@ permissions:
   contents: write
   packages: write
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -47,5 +50,3 @@ jobs:
 
       - name: Publish packages
         run: sbt publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
