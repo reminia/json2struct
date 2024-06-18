@@ -41,7 +41,7 @@ type Student struct {
   Age int     
   Address struct {
     Home string  
-    Office: string
+    Office string
   }
 }
 ```
