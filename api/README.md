@@ -71,3 +71,7 @@ Docker image is built using the sbt-native-packager/docker plugin.
 * Start the server by `docker run -d  -p 8080:8080 ghcr.io/reminia/json2struct-api`.
 
 Latest version is up-to-date with the newest code.
+
+## aws lambda
+[Handler](src/main/scala/LambdaHandler.scala) is added for deployment to aws lambda.<br/>
+Build an assembly jar by `sbt 'api/assembly'` and upload to aws lambda code configuration.
