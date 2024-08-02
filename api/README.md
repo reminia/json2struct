@@ -2,7 +2,13 @@
 
 A simple rest [api](src/main/scala/json2struct/api/Server.scala) that servers the conversion between json data and struct type.
 
-Http endpoints:
+Start it locally at 8080 with:
+```bash
+sbt
+api / runMain json2struct.api.Server
+```
+
+## Http endpoints
 
 1. `POST /v1/convert/json`, convert json to struct. The request body is json format,
  like {"name": "RootType", "json":"xxxx"}.
