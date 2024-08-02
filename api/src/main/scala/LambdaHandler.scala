@@ -8,14 +8,19 @@ import scala.concurrent.duration.*
 import scala.concurrent.{Await, Future}
 import scala.jdk.CollectionConverters.*
 
+/** handler for aws lambda */
 object LambdaHandler extends RequestHandler[APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent] {
 
   override def handleRequest(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent = {
     context.getLogger.log("request event:")
     context.getLogger.log(input.toString)
+    val query = input.getQueryStringParameters.asScala.map {
+      case (k, v) => s"$k=$v"
+    }.mkString("?", "&", "")
+    context.getLogger.log("uri query:" + query)
     val request = HttpRequest(
       method = HttpMethods.getForKey(input.getHttpMethod).getOrElse(HttpMethods.POST),
-      uri = Uri(input.getPath),
+      uri = Uri(input.getPath + query),
       entity = HttpEntity(ContentTypes.`application/json`, input.getBody)
     )
     val responseFuture: Future[HttpResponse] = route(request)

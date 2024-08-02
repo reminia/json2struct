@@ -47,6 +47,7 @@ object Server extends Directives with JsonSupport {
     pathPrefix("v2" / "convert") {
       path("json") {
         post {
+          // todo: make name optional
           parameters("name") { name =>
             entity(as[String]) { json =>
               complete {
