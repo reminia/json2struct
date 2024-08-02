@@ -14,9 +14,15 @@ object LambdaHandler extends RequestHandler[APIGatewayProxyRequestEvent, APIGate
   override def handleRequest(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent = {
     context.getLogger.log("request event:")
     context.getLogger.log(input.toString)
-    val query = input.getQueryStringParameters.asScala.map {
-      case (k, v) => s"$k=$v"
-    }.mkString("?", "&", "")
+    val query = {
+      if (input.getQueryStringParameters != null) {
+        input.getQueryStringParameters.asScala.map {
+          case (k, v) => s"$k=$v"
+        }.mkString("?", "&", "")
+      } else {
+        ""
+      }
+    }
     context.getLogger.log("uri query:" + query)
     val request = HttpRequest(
       method = HttpMethods.getForKey(input.getHttpMethod).getOrElse(HttpMethods.POST),
