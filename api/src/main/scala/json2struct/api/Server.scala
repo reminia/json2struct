@@ -12,79 +12,80 @@ import json2struct.api.Conf.HttpPort
 import json2struct.api.JsonSupport.*
 import spray.json.*
 
+import scala.concurrent.ExecutionContextExecutor
 import scala.jdk.CollectionConverters.MapHasAsJava
 import scala.util.{Failure, Success}
 
 object Server extends Directives with JsonSupport {
 
-  def main(args: Array[String]): Unit = {
-    implicit val system = ActorSystem("server", APP_CONF)
-    implicit val ec     = system.dispatcher
+  implicit val system: ActorSystem = ActorSystem("server", APP_CONF)
+  implicit val ec: ExecutionContextExecutor = system.dispatcher
 
-    val route = concat(
-      pathPrefix("v1" / "convert") {
-        path("json") {
+  val route = concat(
+    pathPrefix("v1" / "convert") {
+      path("json") {
+        post {
+          entity(as[JsonBody]) { body =>
+            complete {
+              Converter.convertJson(body.json, body.name)
+                .map(_.print())
+                .mkString(System.lineSeparator())
+            }
+          }
+        }
+      } ~
+        path("struct") {
           post {
-            entity(as[JsonBody]) { body =>
+            entity(as[String]) { struct =>
               complete {
-                Converter.convertJson(body.json, body.name)
+                Converter.convertStruct(struct).map(_.print()).mkString(System.lineSeparator())
+              }
+            }
+          }
+        }
+    },
+    pathPrefix("v2" / "convert") {
+      path("json") {
+        post {
+          parameters("name") { name =>
+            entity(as[String]) { json =>
+              complete {
+                Converter.convertJson(json, name)
                   .map(_.print())
                   .mkString(System.lineSeparator())
               }
             }
           }
-        } ~
-          path("struct") {
-            post {
-              entity(as[String]) { struct =>
-                complete {
-                  Converter.convertStruct(struct).map(_.print()).mkString(System.lineSeparator())
-                }
-              }
-            }
-          }
-      },
-      pathPrefix("v2" / "convert") {
-        path("json") {
+        }
+      } ~
+        path("struct") {
           post {
-            parameters("name") { name =>
-              entity(as[String]) { json =>
+            optionalHeaderValueByName("config") { config =>
+              entity(as[String]) { struct =>
+                val conf = config.fold[Map[String, Any]](Map.empty) { conf =>
+                  conf.parseJson.convertTo[Map[String, Any]]
+                }.asJava
                 complete {
-                  Converter.convertJson(json, name)
+                  Converter.convertStruct(
+                      struct,
+                      ConfigFactory.parseMap(conf).withFallback(APP_CONF)
+                    )
                     .map(_.print())
                     .mkString(System.lineSeparator())
                 }
               }
             }
           }
-        } ~
-          path("struct") {
-            post {
-              optionalHeaderValueByName("config") { config =>
-                entity(as[String]) { struct =>
-                  val conf = config.fold[Map[String, Any]](Map.empty) { conf =>
-                    conf.parseJson.convertTo[Map[String, Any]]
-                  }.asJava
-                  complete {
-                    Converter.convertStruct(
-                      struct,
-                      ConfigFactory.parseMap(conf).withFallback(APP_CONF)
-                    )
-                      .map(_.print())
-                      .mkString(System.lineSeparator())
-                  }
-                }
-              }
-            }
-          }
-      },
-      path("health") {
-        get {
-          complete(StatusCodes.OK, "I'm up!")
         }
+    },
+    path("health") {
+      get {
+        complete(StatusCodes.OK, "I'm up!")
       }
-    )
+    }
+  )
 
+  def main(args: Array[String]): Unit = {
     Http().newServerAt("0.0.0.0", HttpPort)
       .bind(route)
       .onComplete {

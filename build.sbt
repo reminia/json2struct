@@ -70,6 +70,8 @@ lazy val api = project
       "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
       "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion,
       "com.typesafe.akka" %% "akka-stream" % "2.9.0",
+      "com.amazonaws" % "aws-lambda-java-core" % "1.2.1",
+      "com.amazonaws" % "aws-lambda-java-events" % "3.8.0",
       typesafeConfig
     ))
   .settings(
@@ -90,4 +92,12 @@ lazy val api = project
       (Compile / run).toTask(""),
       curlTest
     ).value
+  ).settings(
+    assembly / assemblyJarName := "json2struct-api-assembly.jar",
+    assembly / assemblyMergeStrategy := {
+      case "reference.conf" => MergeStrategy.concat
+      case "application.conf" => MergeStrategy.concat
+      case PathList("META-INF", _*) => MergeStrategy.discard
+      case x => MergeStrategy.first
+    }
   ).dependsOn(core)
