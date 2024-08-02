@@ -74,4 +74,4 @@ Latest version is up-to-date with the newest code.
 
 ## aws lambda
 [Handler](src/main/scala/LambdaHandler.scala) is added for deployment to aws lambda.<br/>
-Build an assembly jar by `sbt 'api/assembly'` and upload to aws lambda code configuration.
+Build the assembly jar by `sbt 'api/assembly'` and upload it to aws lambda code configuration.
