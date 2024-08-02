@@ -1,4 +1,3 @@
-import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.*
 import akka.util.ByteString
 import com.amazonaws.services.lambda.runtime.events.{APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent}
@@ -19,7 +18,7 @@ object LambdaHandler extends RequestHandler[APIGatewayProxyRequestEvent, APIGate
       uri = Uri(input.getPath),
       entity = HttpEntity(ContentTypes.`application/json`, input.getBody)
     )
-    val responseFuture: Future[HttpResponse] = Http().singleRequest(request)
+    val responseFuture: Future[HttpResponse] = route(request)
     val response: HttpResponse = Await.result(responseFuture, 10.seconds)
 
     val responseBodyFuture: Future[String] = response.entity.dataBytes.runFold(ByteString.empty)(_ ++ _).map(_.utf8String)
