@@ -1,6 +1,6 @@
 # api
 
-A simple rest [api](src/main/scala/json2struct/api/Server.scala) that servers the conversion between json data and struct type.
+A simple rest [api](src/main/scala/json2struct/api/Server.scala) that serves the conversion between json data and struct type.
 
 Start it locally at 8080 with:
 ```bash
