@@ -35,6 +35,7 @@ curl -X POST -H "Content-Type: application/json"  -d '{
   "json": "{\"usage\":{\"prompt_tokens\":5,\"completion_tokens\":7,\"total_tokens\":12}}"}' \
   http://localhost:8080/v1/convert/json
 
+# name is optional, default to Root
 curl -X POST -d '{
     "usage": {
       "prompt_tokens": 5,

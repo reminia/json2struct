@@ -47,11 +47,10 @@ object Server extends Directives with JsonSupport {
     pathPrefix("v2" / "convert") {
       path("json") {
         post {
-          // todo: make name optional
-          parameters("name") { name =>
+          parameters(Symbol("name").?) { name =>
             entity(as[String]) { json =>
               complete {
-                Converter.convertJson(json, name)
+                Converter.convertJson(json, name.getOrElse("Root"))
                   .map(_.print())
                   .mkString(System.lineSeparator())
               }
