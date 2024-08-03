@@ -3,6 +3,10 @@
 Convert between json and Golang struct, using json4s as the json AST and scalacheck for random data
 generation.
 
+Try it at [json2struct-fe](https://json2struct-fe.pages.dev/).
+Please note that the initial request may be slow due to the AWS Lambda cold start.
+However, subsequent requests will be much faster.
+
 ## Motivation
 
 It's needed frequently to convert between http request/response body and struct types in Golang.
