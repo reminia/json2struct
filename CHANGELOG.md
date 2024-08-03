@@ -48,3 +48,4 @@ type Student struct {
 
 ## 0.7.0
 * aws lambda deployment support
+* add frontend for the api
