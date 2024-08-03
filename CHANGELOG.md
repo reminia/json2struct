@@ -49,3 +49,4 @@ type Student struct {
 ## 0.7.0
 * aws lambda deployment support
 * add frontend for the api
+* /v2/convert/json?name=Root, make name query optional, default to Root
