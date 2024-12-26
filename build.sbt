@@ -2,7 +2,7 @@ import Build.*
 
 name := "json2struct"
 
-val projectVersion = "0.7.0"
+val projectVersion = "0.7.1"
 val scala2version = "2.13.12"
 val javaVersion = "11"
 val apiDockerVersion = projectVersion
@@ -72,6 +72,8 @@ lazy val api = project
       "com.typesafe.akka" %% "akka-stream" % "2.9.0",
       "com.amazonaws" % "aws-lambda-java-core" % "1.2.1",
       "com.amazonaws" % "aws-lambda-java-events" % "3.8.0",
+      "org.slf4j" % "slf4j-api" % "2.0.12",
+      "ch.qos.logback" % "logback-classic" % "1.5.6",
       typesafeConfig
     ))
   .settings(

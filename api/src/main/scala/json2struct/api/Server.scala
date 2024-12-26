@@ -21,69 +21,71 @@ object Server extends Directives with JsonSupport {
   implicit val system: ActorSystem = ActorSystem("server", APP_CONF)
   implicit val ec: ExecutionContextExecutor = system.dispatcher
 
-  val route = concat(
-    pathPrefix("v1" / "convert") {
-      path("json") {
-        post {
-          entity(as[JsonBody]) { body =>
-            complete {
-              Converter.convertJson(body.json, body.name)
-                .map(_.print())
-                .mkString(System.lineSeparator())
-            }
-          }
-        }
-      } ~
-        path("struct") {
+  val route = handleExceptions(UnifiedExceptionHandler.default) {
+    concat(
+      pathPrefix("v1" / "convert") {
+        path("json") {
           post {
-            entity(as[String]) { struct =>
+            entity(as[JsonBody]) { body =>
               complete {
-                Converter.convertStruct(struct).map(_.print()).mkString(System.lineSeparator())
-              }
-            }
-          }
-        }
-    },
-    pathPrefix("v2" / "convert") {
-      path("json") {
-        post {
-          parameters(Symbol("name").?) { name =>
-            entity(as[String]) { json =>
-              complete {
-                Converter.convertJson(json, name.getOrElse("Root"))
+                Converter.convertJson(body.json, body.name)
                   .map(_.print())
                   .mkString(System.lineSeparator())
               }
             }
           }
-        }
-      } ~
-        path("struct") {
-          post {
-            optionalHeaderValueByName("config") { config =>
+        } ~
+          path("struct") {
+            post {
               entity(as[String]) { struct =>
-                val conf = config.fold[Map[String, Any]](Map.empty) { conf =>
-                  conf.parseJson.convertTo[Map[String, Any]]
-                }.asJava
                 complete {
-                  Converter.convertStruct(
-                      struct,
-                      ConfigFactory.parseMap(conf).withFallback(APP_CONF)
-                    )
+                  Converter.convertStruct(struct).map(_.print()).mkString(System.lineSeparator())
+                }
+              }
+            }
+          }
+      },
+      pathPrefix("v2" / "convert") {
+        path("json") {
+          post {
+            parameters(Symbol("name").?) { name =>
+              entity(as[String]) { json =>
+                complete {
+                  Converter.convertJson(json, name.getOrElse("Root"))
                     .map(_.print())
                     .mkString(System.lineSeparator())
                 }
               }
             }
           }
+        } ~
+          path("struct") {
+            post {
+              optionalHeaderValueByName("config") { config =>
+                entity(as[String]) { struct =>
+                  val conf = config.fold[Map[String, Any]](Map.empty) { conf =>
+                    conf.parseJson.convertTo[Map[String, Any]]
+                  }.asJava
+                  complete {
+                    Converter.convertStruct(
+                        struct,
+                        ConfigFactory.parseMap(conf).withFallback(APP_CONF)
+                      )
+                      .map(_.print())
+                      .mkString(System.lineSeparator())
+                  }
+                }
+              }
+            }
+          }
+      },
+      path("health") {
+        get {
+          complete(StatusCodes.OK, "I'm up!")
         }
-    },
-    path("health") {
-      get {
-        complete(StatusCodes.OK, "I'm up!")
       }
-    }
-  )
+    )
+  }
 
   def main(args: Array[String]): Unit = {
     Http().newServerAt("0.0.0.0", HttpPort)
@@ -95,5 +97,4 @@ object Server extends Directives with JsonSupport {
           println(s"Server started failed on 0.0.0.0:$HttpPort due to " + e.getMessage)
       }
   }
-
 }

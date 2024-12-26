@@ -50,3 +50,6 @@ type Student struct {
 * aws lambda deployment support
 * add frontend for the api
 * /v2/convert/json?name=Root, make name query optional, default to Root
+
+## 0.7.1
+* add unified exception handler for api request
